@@ -1,0 +1,106 @@
+\subsection{Conjunction-headed/Prague}
+The last approach discussed here is the one associated with the Prague Dependency Treebank, called the Prague approach by \cite{popel2013coordination} or the conjunction-headed by \cite{prz:woz:23}.
+
+\begin{Center}
+\begin{dependency}[theme = simple]
+            \begin{deptext}
+    $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
+            \end{deptext}
+            \depedge{1}{9}{}
+            \depedge{9}{2}{}
+            \depedge{9}{6}{}
+            \depedge{9}{10}{}
+            \wordgroup{1}{2}{4}{c1}
+            \wordgroup{1}{6}{8}{c2}
+            \wordgroup{1}{10}{12}{c3}
+        \end{dependency}
+\end{Center}
+
+This is another example of the symmetrical styles, as here again the governor treats all of the conjuncts the same way -- in this case, does not connect to any of them. Instead, there is a dependency connecting the governor and the conjunction, which then has the conjuncts of the coordination as its dependents. In case of a coordination without a conjunction, the governor would connect to a punctuation mark. 
+
+\begin{multicols}{2}
+\begin{exe}
+\ex
+\begin{xlist}
+% gov on the left, shorter conj on the left
+\ex
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{4}{}
+    \depedge{4}{2}{}
+    \depedge{4}{5}{}
+    \wordgroup{1}{2}{3}{}
+    \wordgroup{1}{5}{9}{}
+\end{dependency}
+
+\ex
+% gov on the left, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{7}{}
+    \depedge{7}{2}{}
+    \depedge{7}{8}{}
+    \wordgroup{1}{2}{6}{}
+    \wordgroup{1}{8}{9}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{3}{}
+    \depedge{3}{1}{}
+    \depedge{3}{4}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{6}{}
+    \depedge{6}{1}{}
+    \depedge{6}{7}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{3}{}
+    \depedge{3}{1}{}
+    \depedge{3}{4}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{6}{}
+    \depedge{6}{1}{}
+    \depedge{6}{7}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+\end{xlist}
+\end{exe}
+\end{multicols}
+
+This annotation style again generates new predictions about the preferred ordering of conjuncts. With the governor placed on the left and without any governor present, this approach should prefer to have the shorter conjunct on the left side of the coordination. With the governor on the right, this approach predicts that ordering does not matter -- in both cases presented here the sum of dependency lengths is the same. 

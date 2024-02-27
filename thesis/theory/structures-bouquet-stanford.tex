@@ -1,0 +1,108 @@
+\subsection{Bouquet/Stanford}
+The bouquet structure comes from the Stanford parser \citep{de-marneffe-etal-2006-generating}. Below is a simplified illustration of such a structure\footnote{It should be mentioned that in all of the diagrams in Section \ref{sec:coord annotations} it is assumed that the head of the conjunct is its first word. Such an assumption is justified, because the work presented here is based solely on the English language, which is mostly head-initial, therefore those structures are more likely to be shaped in the way presented here, than in any other.}.
+
+\begin{Center}
+\begin{dependency}[theme = simple]
+        \begin{deptext}
+        
+        $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
+            \end{deptext}
+            \depedge{1}{2}{}
+            \depedge{2}{6}{}
+            \depedge{2}{10}{}
+            \depedge{10}{9}{}
+            \wordgroup{1}{2}{4}{c1}
+            \wordgroup{1}{6}{8}{c2}
+            \wordgroup{1}{10}{12}{c3}
+        \end{dependency}
+\end{Center}
+
+There is a dependency connecting the governor of the coordination to the first conjunct, which is then connected to the heads of each conjunct, thus forming a bouquet. The conjunction is simply attached to the last conjunct in the structure. This style of annotating is one of the asymmetrical ones, since it does not treat all conjuncts of the coordination equally -- it places emphasis on the first conjunct of a coordination by making it the head of every other conjunct. 
+\begin{multicols}{2}
+\begin{exe}
+\ex
+\label{ex:bouquet diagrams}
+\begin{xlist}
+% gov on the left, shorter conj on the left
+\ex
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{2}{}
+    \depedge{2}{5}{}
+    \depedge{5}{4}{}
+    \wordgroup{1}{2}{3}{}
+    \wordgroup{1}{5}{9}{}
+\end{dependency}
+
+\ex
+% gov on the left, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{2}{}
+    \depedge{2}{8}{}
+    \depedge{8}{7}{}
+    \wordgroup{1}{2}{6}{}
+    \wordgroup{1}{8}{9}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{1}{}
+    \depedge{1}{4}{}
+    \depedge{4}{3}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{1}{}
+    \depedge{1}{7}{}
+    \depedge{7}{6}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{1}{}
+    \depedge{1}{4}{}
+    \depedge{4}{3}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{1}{}
+    \depedge{1}{7}{}
+    \depedge{7}{6}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+\end{xlist}
+\end{exe}
+\end{multicols}
+The diagrams in (\ref{ex:bouquet diagrams}) show how the annotation looks depending on different governor positions as well as conjunct lengths. In this particular case, the dependencies are always the shortest when the shorter conjunct is the one on the left, regardless of the position of the governor. This would suggest that, according to the DLM principle, coordinations with shorter conjuncts placed on the left would always be preferred. 
+
+As the Universal Dependencies annotation scheme (described in Section \ref{sec:ud}) was based on the annotations produced by the Stanford Parser, the scheme now uses the Bouquet style to annotate coordinations. 

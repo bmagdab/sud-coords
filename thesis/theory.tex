@@ -1,0 +1,400 @@
+\section{Dependency grammars}
+% tesniere came up with a somewhat new (panini 600bc) way of creating a syntactic annotation. here are some basic ideas behind it, maybe why it could be useful
+The first full-fledged dependency grammar was proposed by \cite{tesniere}. One of the key ideas included in his work, was that a sentence is not comprised solely of its words, but also of the connections between them -- dependencies. The connections he proposed were directed, therefore one of the words is always a governor (head) and the other is a dependent. Another crucial element of Tesnière's approach was verb centrality -- the verb is the root of every sentence structure in dependency grammar. 
+
+\begin{exe}
+    \ex
+    \label{ex:tesniere}
+    \begin{dependency}[theme = simple]
+    \begin{deptext}
+        Alfred\&speaks\&slowly.\\
+    \end{deptext}
+    \depedge{2}{1}{}
+    \depedge{2}{3}{}
+    \end{dependency}
+\end{exe}
+
+% do i have to say it was used by tesniere? how do i say it?
+Tesnière as an example used the sentence \textsl{Alfred speaks slowly}, for which a dependency tree is shown in (\ref{ex:tesniere}). It visualises the rules described above -- all of the words in a sentence are connected, those connections are directed and the verb is central the whole structure. 
+
+Dependency grammars have changed significantly since Tesnière's ideas were published. One example of such changes is the widespread usage of dependency labels, which describe the grammatical function that a word serves -- Tesnière differentiated only between actants and circumstants, which can be understood as obligatory dependencies of a verb, that complete its meaning, and optional dependencies, that are not necessary to complete the meaning of the verb. Different corpora have their own ideas for sets of dependency labels, for instance full annotation for (\ref{ex:tesniere}) could look similarly to (\ref{ex:tesniere today}), with the label \texttt{root} marking the central element of the sentence, \texttt{subj} marking the subject of the sentence and \texttt{mod} marking a modifier of the verb.
+
+\begin{exe}
+    \ex
+    \label{ex:tesniere today}
+    \begin{dependency}[theme = simple]
+    \begin{deptext}
+        Alfred\&speaks\&slowly.\\
+    \end{deptext}
+    \deproot[edge height=5ex]{2}{root}
+    \depedge{2}{1}{subj}
+    \depedge{2}{3}{mod}
+    \end{dependency}
+\end{exe}
+
+To have a consistent way of storing information about dependency trees, the CoNLL-X format \citep{buchholz-marsi-2006-conll} was developed. Within this format below every sentence there is a list of its tokens (words and punctuation marks) -- each has a line in which there is information about the index of the token in the sentence, its lemma, part of speech, index of its head, label of the dependency that connects it to its head and so on. The format was developed for the purpose of comparing parser outputs in a dependency parsing shared task and is now widely used for representing dependency trees in a plain-text form, either in the original CoNLL-X version or in the revised CoNLL-U one. 
+
+Section \ref{sec:dlm} describes some specific phenomena that can be explained using dependency grammars. In Section \ref{sec:coord annotations} there are described some of the ideas for dependency annotation of coordinate structures that have been used in different corpora and in Section \ref{sec:previous} the studies, that this one is based on, are described. The last two sections of this chapter delve into more detail about two projects concerned with creating consistent dependency annotation schemes -- Universal Dependencies in Section \ref{sec:ud} and Surface-syntactic Universal Dependencies in \ref{sec:sud}. 
+
+\section{Dependency length minimization}\label{sec:dlm}
+% within this idea of dependencies in language, it was conceived that people while speaking try to minimise the dependencies in their utterances, so that it is easier to parse and understand, what they are trying to say. here are some studies about dlm and how this drive to shorten the dependencies may have affected grammar in some languages (hawkins94?)
+% idk if it was within dependency grammars
+% CITE TEMPERLEY 2018 SOMEWHERE HERE MAYBE
+Familiarity with dependency grammars helps understand the principle of Dependency Length Minimization (henceforth DLM). It states that natural languages prefer shorter dependencies in their sentences. An example from \cite{hp83}, shown in (\ref{ex:dlm janitor}) illustrates this.
+
+%is this really the best example? its very specific, because its about verb-particle constructions, maybe something more general would fit better
+\begin{exe}
+    \ex
+    \label{ex:dlm janitor}
+    \begin{xlist}
+    \ex
+    \label{ex:dlm janitor1}
+    \begin{dependency}[theme = simple, segmented edge]
+        \begin{deptext}
+        The\&janitor\&threw\&out\&the\&rickety\&and\&badly\&scratched\&chair.\\
+        \end{deptext}
+        \depedge{3}{4}{}
+    \end{dependency}
+
+    \ex
+    \label{ex:dlm janitor2}
+    \begin{dependency}[theme = simple, segmented edge, edge height = 4ex]
+        \begin{deptext}
+        The\&janitor\&threw\&the\&rickety\&and\&badly\&scratched\&chair\&out.\\
+        \end{deptext}
+        \depedge{3}{10}{}
+    \end{dependency}
+    \end{xlist}
+\end{exe}
+
+The study has shown that speakers deem sentences similar to (\ref{ex:dlm janitor1}) more acceptable than the ones similar to (\ref{ex:dlm janitor2})\footnote{In the study it is actually found that its not the distance between the verb and the particle that affects the acceptability of sentences like those, but the syntactic complexity of the phrases within that distance. It was shown however, syntactic complexity as a measure of dependency length correlates with many others proposed, intervening words included \citep{wasow2002postverbal}.}. Proposed explanations for this preference are based on language-processing constraints, which are usually said to be caused by working memory limitations. With longer dependencies, while reading or hearing a sentence, a person has to keep certain words in their working memory for a longer time. The longer the dependency, the harder the retrieval of the needed word from the working memory. Similar effects have been found in other studies, both psycholinguistic ones \citep{GIBSON19981, KING1991580} and the ones based on corpus research \citep{dyer-2023, gildea-temperley-2007-optimizing, gildea-temperley-2010}. 
+
+% the idea of dlm in grammar and dlm in usage
+The DLM effect has been observed both at the level of usage and at the level of grammar. The former has been explained already -- when speakers have a few grammatically correct ways of phrasing a sentence, they are most likely to choose phrasing that will minimize the distance between connected words. As for DLM in grammar, an example is provided by \cite{futrell2020}. They first compared aggregate dependency lengths within natural language sentences to those in sentences created by randomising the word order while keeping the structure of the tree the same. Random-order sentences turned out to have longer overall dependencies than the natural language sentences, which was proof that, assuming grammar allows for multiple structures of a sentence, people choose the ones with shorter dependencies, therefore DLM works at the level of usage. The next step was to see if it works also at the level of grammar -- to this end they checked whether the possible grammatical sentences (not necessarily chosen by speakers) minimised dependency lengths compared to sentences generated by the less constrained grammars. This way they found DLM to be influencing the grammar as well.
+
+One of the earlier formulations of rules similar to DLM was made by \cite{behaghel}. He proposed two laws of word order:
+
+\begin{itemize}
+    \item[1.] That which belongs together mentally is placed close together.
+    \item[2.] Of two sentence components, the shorter goes before the longer, when possible.
+\end{itemize}
+
+The first of these could be understood as DLM, while the other is a consequence of DLM in head-initial languages. Looking at how syntactic trees are usually shaped in a language allows for a judgement on the headedness or directionality of said language -- it can be head-initial if most dependencies are directed to right, or head-final if they are mostly directed to the left. English is an example of a head-initial language, therefore the second law proposed by Behaghel holds for English sentences. 
+
+\section{Possible dependency structures of a coordination}\label{sec:coord annotations}
+% coordination is a funny structure and there have been many ideas how to annotate them within the dependency approach to syntax. here are some ideas on how to do it, where they come from and maybe some rationale behind them
+
+Different corpora choose different approaches to annotating the dependency structure of a coordination. \cite{popel2013coordination} proposed a taxonomy of those, which consists of three families of annotation styles: Prague, Stanford and Moscow. \cite{prz:woz:23} add to those three a London family. All four of those families are described in more detail in the following subsections. Diagrams are used to better illustrate them, where:
+\begin{itemize}
+    \item $\odot$ is the governor of the coordination;
+    \item each $\diamond$ symbolises a token, grouped together with a few others in a rectangle, forming a conjunct;
+    \item $\square$ is the conjunction of the coordination.
+\end{itemize}
+
+Therefore a coordination presented in (\ref{ex:govLeft}) using this set of symbols would look like in (\ref{ex:diagram}).
+
+\begin{exe}
+    \ex
+    \label{ex:diagram}
+    \begin{dependency}
+        \begin{deptext}
+            in\&[.5cm]this\&[.5cm]and\&[.5cm]so\&many\&things\\
+            \\
+            $\odot$\&$\diamond$\&$\square$\&\&$\diamond\diamond\diamond$\&\\
+        \end{deptext}
+        \wordgroup{3}{2}{2}{}
+        \wordgroup{3}{5}{5}{}
+    \end{dependency}
+\end{exe}
+
+\input{theory/structures-bouquet-stanford}
+\input{theory/structures-chain-moscow}
+\input{theory/structures-multi-headed-london}
+\input{theory/structures-conjunction-headed-prague}
+
+\section{Previous studies}\label{sec:previous}
+The current study is a replication of \cite{prz:woz:23}, who researched coordinate structures to find out whether ordering of conjuncts in English is as simple as placing shorter conjuncts on the left or the placement of the governor of the coordination has some influence on the ordering. They used the Penn Treebank, which is an annotated corpus of texts from the Wall Street Journal. This relatively small, but high quality dataset allowed them to make an argument for the symmetric styles of annotating coordination -- they found that the proportion of shorter left conjuncts rose with increasing length differences between conjuncts, but only in coordinations with the governor on the left or without a governor. If the governor was on the right of the coordination, chances for the shorter conjuncts appearing on either side were equal. This is compatible with what the Prague approach would predict, assuming DLM working at the level of usage. The London approach could also explain those results, but only if DLM at the level of grammar was assumed. Since English is a head-initial language, DLM still suggests that shorter dependencies will be placed first, according to the second word of law order proposed by \cite{behaghel}. This means that there is a grammaticalised pressure to place shorter conjuncts on the left, and since in case where there is no governor there are no immediate pressures to order the conjuncts in a certain way, the general, grammaticalised pressure may be visible. 
+
+\cite{pbg2023} have already conducted a replication study of this research. The aims were to see whether the conclusions drawn in the original study hold up when the data come from a bigger and more diverse corpus, but annotated automatically using the Stanza parser. The results were slightly different, but sharpened the conclusions from the original study. In the bigger dataset they found the coordinations with the governor on the left and without a governor to behave the same -- with growing length differences between conjuncts the proportion of shorter left conjuncts was higher. Only this time, when the governor was on the right, proportion of shorter left conjuncts was lower with bigger length differences, meaning that the shorter conjunct was drawn to the governor. The Prague annotation predicts that with governor on the right there should be no pressures to order the conjuncts in any way, therefore it turned out to be less compatible than the London approach. Assuming this annotation style, the coordinations with the governor on the right should in fact have shorter conjuncts on the right and the rising proportion of the shorter left conjuncts when there is no governor could be again explained by the grammaticalised pressures of DLM. 
+
+The main issue with this replication study was the low evaluation score of the extracted data. Only 50.1\% coordinations in the evaluation sample turned out to have correct information for analysis. Reasons for such a low outcome, as well as potential solutions are discussed in Section \ref{sec:sud}.
+
+\section{Universal Dependencies}\label{sec:ud}
+% theres a project that tries to maybe sort of unify all those ideas for dependency annotation? they want it to be universal, heres how they decided to do it and heres other things about it that will be relevant later (criterion for choosing heads). its been perceived as pretty universal, its used a lot, everywhere almost. there are also enhanced universal depencies, they should be mentioned somewhere although they are not very related to what is described here
+
+% why it was created
+As seen in Section \ref{sec:coord annotations}, there have been many ideas on how to create dependency annotation. Universal Dependencies (UD, henceforth) is a project focused on formulating guidelines for creating dependency annotation, that would suit as many languages as possible, while maintaining the possibility to represent phenomena specific to any given language. The guidelines outline how one should deal with word segmentation, part-of-speech tagging, assigning morphological features and creating an appropriate dependency structure for a sentence. 
+
+% criteria for choosing dependency heads
+Rules for creating a dependency structure are the most relevant part here. In the first version of UD \citep{ud1} three of them are specified: dependency relations appear between content words, function words are attached to the content words, which they describe, and punctuation marks are attached to the head of the phrase or clause in which it appears. Content words chosen here for dependency heads can otherwise be called "lexical" or "semantic" centers, whereas function words serve mostly a syntactic purpose in a sentence. In the sentence (\ref{ex:ud eng tree}) among the words \textsl{will} and \textsl{participate}, the latter is the one that carries the meaning, thus it is the content word, head of the dependency and, in this case, root of the whole sentence.
+
+\begin{exe}
+    \ex
+    \label{ex:ud eng tree}
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            Ivan\&will\&participate\&in the show\&.\\
+        \end{deptext}
+        \deproot{3}{root}
+        \depedge{3}{1}{nsubj}
+        \depedge{3}{2}{aux}
+        \depedge{3}{4}{nmod}
+        \depedge{3}{5}{punct}
+    \end{dependency}
+\end{exe}
+
+The reasoning behind setting those criteria is that it increases the chance of finding similar tree structures in different languages, for example when comparing sentences between English and French, which is morphologically richer. In (\ref{ex:ud fr tree}) there is a tree for the French translation of the sentence in (\ref{ex:ud eng tree}). Even though the French sentence does not have an auxiliary word to mark the future tense, the structures of those sentences are almost identical, which would not be possible if UD chose to create dependencies between functional words, rather than content words.
+
+\begin{exe}
+    \ex
+    \label{ex:ud fr tree}
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            Ivan\&participera\&au spectacle\&.\\
+        \end{deptext}
+        \deproot{2}{root}
+        \depedge{2}{1}{nsubj}
+        \depedge{2}{3}{nmod}
+        \depedge{2}{4}{punct}
+    \end{dependency}
+\end{exe}
+
+For an annotation project on such a significant scale, a unified format for the data was needed, therefore the CoNLL-X format was adapted to the UD needs. This version of the format is used in the current work. 
+
+\section{Surface-syntactic Universal Dependencies}\label{sec:sud}
+% there was another idea for universal dependency annotation scheme, they want to be universal too, but in a different way, more syntactic but only on the surface. thats why they called themselves surface syntactic universal dependencies. they maybe slightly disagreed with some decisions made in UD so they made their own version. heres how they differ in ways that important for me
+Surface-syntactic Universal Dependencies (SUD, henceforth) is another example of an attempt at creating a set of universal guidelines for dependency annotation. \cite{gerdes-etal-2018-sud} describe it as "near-isomorphic to UD" and offer a set of conversion rules between the schemes. Most of the SUD annotation guidelines are the same as in UD, the most prominent difference is the change in choosing dependency heads, from content words to function words. This section covers the relevant differences between the schemes and how those are beneficial for research described in this work.
+
+\subsection{Criteria for choosing heads of dependencies}\label{sec:sud criteria}
+Instead of favoring content words, SUD uses the distributional criteria for choosing dependency heads, which means that "the surface syntactic head determines the distribution of the unit" \citep{gerdes-etal-2018-sud}. It can be tested by checking which of the words within a dependency behaves in sentences similarly to the way the whole unit does, so which of the words can be replaced by the unit and \textsl{vice versa}. The example sentence the authors use to explain their criteria is \textsl{The little boy talked to Mary}. There is a dependency between words \textsl{little} and \textsl{boy}, and sentences in (\ref{ex:distribution boy}) and (\ref{ex:distribution little}) show why the head of this dependency is the word \textsl{boy}. In (\ref{ex:distribution boy}a) the word \textsl{boy} can be replaced by the unit \textsl{little boy}, as shown in (\ref{ex:distribution boy}b), and the sentence is still grammatical. 
+
+\begin{exe}
+    \ex
+    \label{ex:distribution boy}
+    \begin{itemize}
+        \item[a)] I saw a \textbf{boy}.
+        \item[b)] I saw a \textbf{little boy}.
+    \end{itemize}
+\end{exe}
+
+The same is not the case for the word \textsl{little}. Trying to replace that word with the whole unit in (\ref{ex:distribution little}a) results in an ungrammatical sentence in (\ref{ex:distribution little}b). Sentences (\ref{ex:distribution little}c-d) shows that replacement in the other way is not possible either, therefore the word \textsl{little} cannot be the head of this dependency.
+
+\begin{exe}
+    \ex
+    \label{ex:distribution little}
+    \begin{itemize}
+        \item[a)] The boy was \textbf{little}.
+        \item[b)] *The boy was \textbf{little boy}.
+        \item[c)] I found the \textbf{little boy}.
+        \item[d)] *I found the \textbf{little}.
+    \end{itemize}
+\end{exe}
+
+It is not always possible to test both of the words within a dependency, but in such cases showing that one of the words does not commute with the whole unit is enough to decide it is not the head, therefore the other one must be. As shown in \cite{gerdes-etal-2018-sud}, that is exactly the case with the words \textsl{to Mary} -- it is impossible to see how the word \textsl{to} behaves on its own, as it needs a noun or a verb, but the sentences in (\ref{ex:distribution Mary}) show that \textsl{Mary} does not have the same distribution as those two words together.
+
+\begin{exe}
+    \ex
+    \label{ex:distribution Mary}
+    \begin{itemize}
+        \item[a)] I saw \textbf{Mary}.
+        \item[b)] *I saw \textbf{to Mary}.
+        \item[c)] I talked \textbf{to Mary}.
+        \item[d)] *I talked \textbf{Mary}.
+    \end{itemize}
+\end{exe}
+
+% why is that important for me -- give an example of a sentence with a coordination where one of the conjuncts has an auxiliary dependency, which would be troubling to decipher automatically using UD, but not SUD
+This key difference between UD and SUD has crucial consequences for extracting the exact length of conjuncts in a coordinate structure, which is an integral part of this work. As \cite{prz:woz:23} mention, the UD scheme is not ideal for coordination analysis, as it is not clear which dependencies are shared by the conjuncts and which are private. This is clearly illustrated by the example sentence \textsl{Never drink and drive}, where a human parser knows that the word \textsl{never} applies to both conjuncts of a coordination, but this would not be obvious to an algorithm. As shown in \cite{pbg2023}, some heuristics can be employed to find the extents of conjuncts, but they can fail in some cases. It might however be easier to construct accurate heuristics when working with a more syntax-focused annotation scheme than UD, such as SUD. This is illustrated by sentences (\ref{ex:UD father}) and (\ref{ex:UD ballet}), which are shortened versions of two sentences from the GUM corpus (\texttt{GUM\_whow\_ballet-14} and \texttt{GUM\_fiction\_beast-36} respectively) annotated in UD (above the sentence) and in SUD (below the sentence). Some dependencies are not labelled and \texttt{punct} dependencies have been omitted for better clarity of the structures.
+
+\begin{exe}
+    \ex
+    \label{ex:UD father}
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            I\&did\&not\&go\&near\&my\&father\&but\&kept\&my\&hand\&in\&my\&pocket.\\
+        \end{deptext}
+        \deproot{4}{root}
+        \depedge{4}{1}{nsubj}
+        \depedge{4}{2}{aux}
+        \depedge{4}{3}{advmod}
+        \depedge{4}{7}{obl}
+        \depedge{7}{5}{}
+        \depedge{7}{6}{}
+        \depedge{4}{9}{conj}
+        \depedge{9}{8}{cc}
+        \depedge{9}{11}{obj}
+        \depedge{11}{10}{}
+        \depedge{9}{14}{obl}
+        \depedge{14}{12}{}
+        \depedge{14}{13}{}
+
+        \deproot[edge below]{2}{}
+        \depedge[edge below]{2}{1}{}
+        \depedge[edge below]{2}{4}{comp:aux}
+        \depedge[edge below]{2}{3}{}
+        \depedge[edge below]{5}{7}{}
+        \depedge[edge below]{4}{5}{udep}
+        \depedge[edge below]{7}{6}{}
+        \depedge[edge below]{4}{9}{conj}
+        \depedge[edge below]{9}{8}{cc}
+        \depedge[edge below]{9}{11}{comp:obj}
+        \depedge[edge below]{11}{10}{}
+        \depedge[edge below]{12}{14}{}
+        \depedge[edge below]{9}{12}{udep}
+        \depedge[edge below]{14}{13}{}
+    \end{dependency}
+\end{exe}
+
+\begin{exe}
+    \ex
+    \label{ex:UD ballet}
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            Ballet\&shoes\&should\&be\&snug,\&but\&not\&so\&tight\&they\&cut\&off\&blood\&flow.\\
+        \end{deptext}
+        \deproot{5}{root}
+        \depedge{5}{2}{nsubj}
+        \depedge{2}{1}{}
+        \depedge{5}{3}{aux}
+        \depedge{5}{4}{cop}
+        \depedge{5}{9}{conj}
+        \depedge{9}{6}{cc}
+        \depedge{9}{7}{advmod}
+        \depedge{9}{8}{advmod}
+        \depedge{9}{11}{advcl}
+        \depedge{11}{10}{}
+        \depedge{11}{12}{}
+        \depedge{11}{14}{}
+        \depedge{14}{13}{}
+
+        \deproot[edge below]{3}{}
+        \depedge[edge below]{3}{2}{}
+        \depedge[edge below]{2}{1}{}
+        \depedge[edge below]{3}{4}{}
+        \depedge[edge below]{4}{5}{comp:pred}
+        \depedge[edge below]{5}{9}{conj}
+        \depedge[edge below]{9}{6}{cc}
+        \depedge[edge below]{9}{7}{mod}
+        \depedge[edge below]{9}{8}{mod}
+        \depedge[edge below]{9}{11}{mod}
+        \depedge[edge below]{11}{10}{}
+        \depedge[edge below]{11}{12}{}
+        \depedge[edge below]{11}{14}{}
+        \depedge[edge below]{14}{13}{}
+    \end{dependency}
+\end{exe}
+
+Based on heuristics used by \cite{pbg2023}, the tree in (\ref{ex:UD father}) would give a coordination with conjuncts \textsl{go near my father} and \textsl{kept my hand in my pocket}. That would be, because the head of the left conjunct, \textsl{go}, has on its left side a dependency labeled \texttt{aux} and the head of the right conjunct, \textsl{kept} does not have a dependency like this one, therefore \texttt{aux} has to be shared by both conjuncts. The correct parse of this sentence gives a coordination with conjuncts \textsl{did not go near my father} and \textsl{kept my hand in my pocket}, so the dependencies \textsl{did not} should not be shared, but private to the first conjunct. 
+
+Modifying the heuristics, so that they fit this example, for instance by saying that \texttt{aux} dependencies should always be included in the left conjunct, would on the other hand mean that sentences such as in (\ref{ex:UD ballet}) would have incorrect extracted coordinations. In this example the correct coordinate structure has conjuncts \textsl{snug} and \textsl{not so tight they cut off blood flow}, but was the algorithm to include the \texttt{aux} dependency in the first conjunct (as would be required in (\ref{ex:UD father})), the result would be conjuncts \textsl{should be snug} and \textsl{not so tight they cut off blood flow}.
+
+This however is not an issue when using the SUD scheme. There, the words \textsl{did not} cannot be dependencies of the coordination, because it is the coordination that is dependent on the word \textsl{did}. This way it is ensured that words \textsl{did not} will not be a part of the first conjnuct and this results in the correct extraction of the coordinate structure. Changing the annotation scheme to SUD does not affect the sentence in (\ref{ex:UD ballet}) -- the word \textsl{snug} has to be the whole left conjunct, because it also does not have any dependencies in this annotation scheme.
+
+% \begin{exe}
+%     \ex
+%     \label{ex:SUD father}
+%     \begin{dependency}[theme = simple]
+%         \begin{deptext}
+%             I\&did\&not\&go\&near\&my\&father\&but\&kept\&my\&hand\&in\&my\&pocket.\\
+%         \end{deptext}
+%         \deproot{2}{}
+%         \depedge{2}{1}{}
+%         \depedge{2}{4}{comp:aux}
+%         \depedge{2}{3}{}
+%         \depedge{5}{7}{}
+%         \depedge{4}{5}{udep}
+%         \depedge{7}{6}{}
+%         \depedge{4}{9}{conj}
+%         \depedge{9}{8}{cc}
+%         \depedge{9}{11}{comp:obj}
+%         \depedge{11}{10}{}
+%         \depedge{12}{14}{}
+%         \depedge{9}{12}{udep}
+%         \depedge{14}{13}{}
+%     \end{dependency}
+% \end{exe}
+
+% \begin{exe}
+%     \ex
+%     \label{ex:SUD ballet}
+%     \begin{dependency}[theme = simple]
+%         \begin{deptext}
+%             Ballet\&shoes\&should\&be\&snug,\&but\&not\&so\&tight\&they\&cut\&off\&blood\&flow.\\
+%         \end{deptext}
+%         \deproot{3}{}
+%         \depedge{3}{2}{}
+%         \depedge{2}{1}{}
+%         \depedge{3}{4}{}
+%         \depedge{4}{5}{comp:pred}
+%         \depedge{5}{9}{conj}
+%         \depedge{9}{6}{cc}
+%         \depedge{9}{7}{mod}
+%         \depedge{9}{8}{mod}
+%         \depedge{9}{11}{mod}
+%         \depedge{11}{10}{}
+%         \depedge{11}{12}{}
+%         \depedge{11}{14}{}
+%         \depedge{14}{13}{}
+%     \end{dependency}
+% \end{exe}
+
+\subsection{Explicit information about shared dependencies}
+Besides the structural advantages that SUD has over UD when it comes to analysing coordination, there is one additional feature that is added in SUD treebanks that helps find the extent of conjuncts. 
+
+While UD corpora are often created specifially for the purpose of participating in the UD project or converted with manual corrections from different dependency annotations, the SUD corpora are mostly converted automatically from UD. There are a few French treebanks, as well as for Beja, Zaar, Chinese and Naija, that are natively made for SUD, but all others are converted from UD using rule-based graph transformation grammars, which are described in more detail in Chapter 3. 
+
+As was mentioned in Section \ref{sec:coord annotations}, UD uses the Bouquet approach to annotating coordination, while SUD uses the Chain one. This means that in the conversion process, some information about the privacy status of a dependency of the coordination can be lost. This is visible in the coordination presented in the sentence \textsl{I just sat in there for like an hour and a half straight and studied} (\texttt{GUM\_vlog\_studying-27} from the GUM corpus). As annotation in UD in (\ref{ex:UD 1,5h straight}) shows, the word \textsl{straight} is shared by the whole structure. This is not structurally visible in the SUD version in (\ref{ex:SUD 1,5h straight}), where the \texttt{mod} dependency for the word \textsl{straight} is attached to the last conjunct. 
+
+\begin{exe}
+    \ex
+    \label{ex:UD 1,5h straight}
+    %\hspace{1cm}\\
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            an\&hour\&and\&a\&half\&straight\\
+            \&\&\&\&\&\footnotesize\textsf{upos=ADV}\\
+            \&\&\&\&\&\footnotesize\textsf{lemma=straight}\\
+            \&\&\&\&\&\footnotesize\textsf{Degree=Pos}\\
+        \end{deptext}
+        \depedge{2}{5}{conj}
+        \depedge{5}{3}{cc}
+        \depedge{2}{6}{advmod}
+    \end{dependency}
+\end{exe}
+
+\begin{exe}
+    \ex
+    \label{ex:SUD 1,5h straight}
+    %\hspace{1cm}\\
+    \begin{dependency}[theme = simple]
+        \begin{deptext}
+            an\&hour\&and\&a\&half\&straight\\
+            \&\&\&\&\&\footnotesize\textsf{upos=ADV}\\
+            \&\&\&\&\&\footnotesize\textsf{lemma=straight}\\
+            \&\&\&\&\&\footnotesize\textsf{Degree=Pos}\\
+            \&\&\&\&\&\footnotesize\textsf{Shared=Yes}\\
+        \end{deptext}
+        \depedge{2}{5}{conj}
+        \depedge{5}{3}{cc}
+        \depedge{5}{6}{mod}
+    \end{dependency}
+\end{exe}
+
+So as not to lose this information while converting the annotation scheme, feature \textsf{Shared=Yes} is added. Similarly, in coordinations where a dependent is attached to the right conjunct in the UD scheme (therefore private to the right conjuct), during the conversion to SUD the feature \textsf{Shared=No} is added.
+
+While the work described here is not based on the conversion code itself, this information still might prove itself useful. The parser was trained on SUD corpora, therefore it might be able to provide additional clues as to which dependents are shared and which are private. 
+
+\subsection{Learnability of dependency schemes}
+% in pbg23 they tried to use ud but failed (50.1%)
+The current study is another replication of \cite{prz:woz:23}. As was pointed out in Chapter \ref{ch:introduction}, \cite{pbg2023} have conducted identical analysis on the COCA corpus annotated automatically in the UD scheme. After evaluating the automatically annotated data they found only 50.1\% of the coordinations in the evaluation sample to be correctly extracted from the corpus. Reason for such an outcome can be twofold: the issues lie either within the parsing accuracy or the script for extracting coordinations from dependency trees. 
+
+The latter has been addressed to some extent in Section \ref{sec:sud criteria} -- heuristics for finding conjunct extents are easier to develop within a function-word focused annotation scheme. As for the former, there are studies showing that the UD scheme is harder to parse. \cite{rehbein-etal-2017-universal} show that choosing content words rather than function words for dependency heads increases arc direction entropy (measure describing how consistent are dependency directions in a given treebank), which then lowers parsing accuracy. In another study, \cite{kohita-etal-2017-multilingual} converted UD trees into ones with function heads, rather than content heads. They then used the converted trees for training parsers and parsed 19 treebanks using both UD and converted models. After parsing, the results from the converted model were converted back to UD and for most of the languages (11 out of 19) those results had better scores. 
+
+Criterion for choosing dependency heads may not be the only structural advantage that SUD has over UD in terms of parsing. As \cite{gerdes-etal-2018-sud} demonstrate in their article, the Chain approach to annotating coordination, that is used in SUD, minimises the dependency lengths compared to the Bouquet approach used in UD. This may be beneficial for parsing accuracy, as parsers tend to perform better when working with shorter dependencies \citep{nilsson-etal-2006-graph, eisner-smith-2005-parsing}. 
+% could add here about shorter dependencies in SUD than UD in general, citing typometrics.elizia.net, but idk how to do that
+% As can be observed in [typometrics], SUD has overall shorter dependencies than UD, therefore whole SUD structures might prove to be easier to parse than UD ones and possibly yield better results at the evaluation stage. 
+
+In the studies cited above the comparison was between UD and a scheme that differed from UD only in some particular aspect, not a new, comprehensive scheme. \cite{tuo:prz:lac:21} however compared UD to SUD, which matters because, as they say, "any realistic annotation schema which employs a more ‘syntactic’ approach to headedness than UD will also differ from UD in the repertoire and distribution of dependency labels, and will also take into account the intrinsic linguistic interaction between various constructions". They trained five parsers, two of which were transition-based and three graph-based, using 21 corpora representing 18 languages. While transition-based parser seemed to perform similarly on both annotation schemes, the graph-based ones preferred SUD. As for attachment scores for the English corpus tested in this experiment (GUM), all of the parsers scored higher with the SUD annotation. The parser utilised in the current study, Stanza, is graph-based and the language of the texts it annotates is English, therefore SUD might be the better choice for the annotation scheme for this data. 
+
+%\section{Summary}
+% to summarise, you can try to see the syntactic structure of a sentence in different ways, i.e. constituency or dependency (any others?). dependency ones are important here, because i use those approaches in the current study. i use a parser to add syntactic annotation to a large corpus. the parser im using is said to work better with SUD rather than UD, so thats the scheme im choosing. the next chapters describe the exact ways in which this syntactic annotation is added and how i later extract the information that i need.

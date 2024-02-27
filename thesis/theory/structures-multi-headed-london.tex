@@ -1,0 +1,107 @@
+\subsection{Multi-headed/London}
+The symmetrical approaches, as the name suggests, treat every conjunct in the coordination the same way. One of them is the multi-headed, or London approach, for which \cite{prz:woz:23} propose the name based on its appearance in Word Grammar developed by Hudson \cite{hudson-2010} at University College London.
+
+\begin{Center}
+\begin{dependency}[theme = simple]
+            \begin{deptext}
+    $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
+            \end{deptext}
+            \depedge{1}{2}{}
+            \depedge{1}{6}{}
+            \depedge{1}{10}{}
+            \depedge{10}{9}{}
+            \wordgroup{1}{2}{4}{c1}
+            \wordgroup{1}{6}{8}{c2}
+            \wordgroup{1}{10}{12}{c3}
+        \end{dependency}
+\end{Center}
+
+The symmetry of the approach comes from the fact that no conjunct is highlighted by being the only direct dependent of coordinations governor. Instead, all of the conjuncts have dependencies connecting them to the governor, and the conjunction is dependent on the last conjunct, similarly to the bouquet approach.
+
+\begin{multicols}{2}
+\begin{exe}
+\ex
+\label{ex:london-all}
+\begin{xlist}
+% gov on the left, shorter conj on the left
+\ex
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{2}{}
+    \depedge{1}{5}{}
+    \depedge{5}{4}{}
+    \wordgroup{1}{2}{3}{}
+    \wordgroup{1}{5}{9}{}
+\end{dependency}
+
+\ex
+% gov on the left, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \depedge{1}{2}{}
+    \depedge{1}{8}{}
+    \depedge{8}{7}{}
+    \wordgroup{1}{2}{6}{}
+    \wordgroup{1}{8}{9}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{1}{}
+    \deproot[edge height=4ex]{4}{}
+    \depedge{4}{3}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov absent, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
+    \end{deptext}
+    \deproot[edge height=4ex]{1}{}
+    \deproot[edge height=4ex]{7}{}
+    \depedge{7}{6}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the left
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{1}{}
+    \depedge{9}{4}{}
+    \depedge{4}{3}{}
+    \wordgroup{1}{1}{2}{}
+    \wordgroup{1}{4}{8}{}
+\end{dependency}
+
+\ex
+% gov on the right, shorter conj on the right
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{1}{}
+    \depedge{9}{7}{}
+    \depedge{7}{6}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+\end{xlist}
+\end{exe}
+\end{multicols}
+
+Here, the predictions for the preferred ordering of conjuncts are different to those in asymmetrical approaches. This annotation suggests that the placement of the governor influences the conjunct ordering, specifically that the shorter conjunct will always be placed near the governor -- with the governor on the left, as in (\ref{ex:london-all}a-b), the dependencies are shorter with the shorter conjunct placed on the left, and with the governor on the right (\ref{ex:london-all}e-f) the shorter conjunct should be placed on the right. In case of no word governing the coordination, there seems to be no preference for any ordering.
