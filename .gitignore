@@ -2,3 +2,10 @@ __pycache__
 .idea
 files
 venv
+thesis/main.aux
+thesis/main.bbl
+thesis/main.blg
+thesis/main.log
+thesis/main.out
+thesis/main.toc
+thesis/titlepage.log
