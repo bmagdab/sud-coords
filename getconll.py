@@ -3,13 +3,13 @@ import stanza
 from tqdm import tqdm
 from stanza.utils.conll import CoNLL
 
-models_path = './venv/stanza-train/stanza/saved_models'
+models_path = './saved_models/'
 config = {
         'processors': 'tokenize,pos,lemma,depparse',
         'lang': 'en',
         'use_gpu': True,
-        'pos_model_path': models_path + '/pos/en_combined-ud_charlm_tagger.pt',
-        'depparse_model_path': models_path + '/depparse/en_combined-ud_charlm_parser.pt',
+        'pos_model_path': models_path + 'en_combined-sud_charlm_tagger.pt',
+        'depparse_model_path': models_path + 'en_combined-sud_charlm_parser.pt',
         'tokenize_pretokenized': False,
         'download_method': stanza.DownloadMethod.REUSE_RESOURCES
 }
@@ -26,5 +26,5 @@ nlp = stanza.Pipeline(**config)
 # create_conllu(sents, genre, year)
 
 doc = nlp('John, Mary or her brother and Peter will come.')
-CoNLL.write_doc2conll(doc, "output.conllu")
+CoNLL.write_doc2conll(doc, "files/output.conllu")
 

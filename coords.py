@@ -15,15 +15,12 @@ from types import NoneType
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-f', nargs='+')
 args = arg_parser.parse_args()
-# nlp = stanza.Pipeline(lang='en', use_gpu=True, processors='tokenize, lemma, pos, depparse, ner', download_method=stanza.DownloadMethod.REUSE_RESOURCES, tokenize_no_ssplit=True)
-# nlpcpu = stanza.Pipeline(lang='en', use_gpu=False, processors='tokenize, lemma, pos, depparse, ner', download_method=stanza.DownloadMethod.REUSE_RESOURCES, tokenize_no_ssplit=True)
-models_path = './venv/stanza-train/stanza/saved_models'
 config = {
         'processors': 'tokenize,pos,lemma,depparse',
         'lang': 'en',
         'use_gpu': True,
-        'pos_model_path': models_path + '/pos/en_combined-ud_charlm_tagger.pt',
-        'depparse_model_path': models_path + '/depparse/en_combined-ud_charlm_parser.pt',
+        'pos_model_path': './saved_models/en_combined-sud_charlm_tagger.pt',
+        'depparse_model_path': './saved_models/en_combined-sud_charlm_parser.pt',
         'tokenize_pretokenized': False,
         'tokenize_no_ssplit': True,
         'download_method': stanza.DownloadMethod.REUSE_RESOURCES
@@ -40,7 +37,7 @@ def chunker(src):
     :return: dictionary with the text chunks, genre, year and source of the parsed texts given in the .tsv
     """
     texts = {}
-    df = pd.read_csv(src, sep='\t', quoting=csv.QUOTE_NONE, lineterminator='\n', quotechar='"')
+    df = pd.read_csv('./files/' + src, sep='\t', quoting=csv.QUOTE_NONE, lineterminator='\n', quotechar='"')
     # przerobione od Adama
     df.dropna()
     filtered1 = df[df["SENT"].str.contains("TOOLONG") == False]
@@ -82,7 +79,7 @@ def chunker(src):
 
 def clean(txt):
     """
-    removes redundant spaces by the punctuation
+    removes redundant spaces surrounding the punctuation
     :param txt: text to clean
     :return: clean text
     """
@@ -377,7 +374,7 @@ def create_conllu(sent_list, genre, year):
             sent_conll.extend(token.to_conll_text().split('\n'))
         doc_conll.append(sent_conll)
 
-    path = os.getcwd() + '/sud_' + str(genre) + '_' + str(year) + '.conllu'
+    path = os.getcwd() + '/files/sud_' + str(genre) + '_' + str(year) + '.conllu'
     with open(path, mode='w', encoding='utf-8') as conll_file:
         for sent in doc_conll:
             for line in sent:
@@ -394,7 +391,7 @@ def create_csv(crd_list, genre, year, source):
     :param source: name of the source file
     :return: nothing
     """
-    path = os.getcwd() + '/sud_' + str(genre) + '_' + str(year) + '.csv'
+    path = os.getcwd() + '/files/sud_' + str(genre) + '_' + str(year) + '.csv'
     with open(path, mode='w', newline="", encoding='utf-8-sig') as outfile:
         writer = csv.writer(outfile)
         col_names = ['governor.position', 'governor.word', 'governor.tag', 'governor.pos', 'governor.ms',
@@ -470,7 +467,7 @@ def run(path):
 
 def run_from_conll(file):
     s = datetime.now()
-    doc = CoNLL.conll2doc(os.getcwd() + '/' + file)
+    doc = CoNLL.conll2doc(os.getcwd() + '/files/' + file)
     e = datetime.now()
     print(e-s)
     coordinations = extract_coords_from_conll(doc)
@@ -481,35 +478,5 @@ def run_from_conll(file):
     print('done!\n' + 30*'--')
 
 
-# normalna wersja do terminala:
-
-# for file in args.f:
-#     print('processing ' + file)
-#     with torch.no_grad():
-#         run(os.getcwd() + '/split/' + file)
-
-# jakieś moje nienormalne wersje nwm:
-
-# run_from_conll('acad_2048.conllu')
-
-# genre = args.f[0]
-# if args.f[1] == '7':
-#     files = [f'split_{genre}_{year}.tsv' for year in range(1991, 2007, 2)]
-#     files.remove(f'split_{genre}_2001.tsv')
-# elif args.f[1] == '6':
-#     files = [f'split_{genre}_{year}.tsv' for year in range(2007, 2021, 2)]
-#     files.remove(f'split_{genre}_2011.tsv')
-# for file in files:
-#     print('processing ' + file)
-#     with torch.no_grad():
-#         run(os.getcwd() + '/split/' + file)
-# PAMIĘTAJ ŻEBY WYPAKOWAĆ PLIKI ZANIM TO PUŚCISZ
-
-# files = [f'stanza_trees_acad_{year}.conllu' for year in range(2008, 2020, 2)]
-# print(files)
-# for file in files:
-#     print('processing ' + file)
-#     run_from_conll(file)
-
-# run('split_news_2046.tsv')
-# run_from_conll('sud_news_2009.conllu')
+# run('split_acad_2014.tsv')
+# run_from_conll('kontr_sud_fic_2046.conllu')
