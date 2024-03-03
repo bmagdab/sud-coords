@@ -47,7 +47,7 @@ def create_csv(crd_list, genre, year, source):
                      'conjunction.word', 'conjunction.tag', 'conjunction.pos', 'conjunction.ms', 'no.conjuncts',
                      'L.conjunct', 'L.dep.label', 'L.head.word', 'L.head.tag', 'L.head.pos', 'L.head.ms', 'L.words',
                      'L.tokens', 'L.syllables', 'L.chars', 'R.conjunct', 'R.dep.label', 'R.head.word', 'R.head.tag',
-                     'R.head.pos', 'R.head.ms', 'R.words', 'R.tokens', 'R.syllables', 'R.chars', 'mid.conjs', 'sentence', 'sent.id',
+                     'R.head.pos', 'R.head.ms', 'R.words', 'R.tokens', 'R.syllables', 'R.chars', 'all.conj.lengths', 'sentence', 'sent.id',
                      'genre', 'converted.from.file']
         writer.writerow(col_names)
 
@@ -82,7 +82,7 @@ def create_csv(crd_list, genre, year, source):
                              int(coord['Rtokens']),                                                                     # R.tokens
                              int(coord['Rsyl']),                                                                        # R.syllables
                              len(coord['Rconj']),                                                                       # R.chars
-                             coord['middle_conjuncts'] if coord['middle_conjuncts'] else '',                            # mid.conjs
+                             coord['conj_lengths'],                                                                     # all.conj.lengths
                              str(coord['sentence']),                                                                    # sentence
                              coord['sent_id'],                                                                          # sent.id
                              genre,                                                                                     # genre

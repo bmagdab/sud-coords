@@ -1,8 +1,6 @@
 import re
 import syll
-import torch
 import stanza
-from tqdm import tqdm
 from types import NoneType
 
 
@@ -48,12 +46,15 @@ def word_indexer(sentence):
         current_id = match.end() + current_id
 
 
-def middle_conjuncts(conj_list, sentence):
+def middle_conjuncts(coord, sentence):
+    conj_list = coord['other_conjuncts']
     conjunct_lengths = []
-    for id in conj_list:
+    for head in conj_list:
         conjunct = []
-        for child in sentence.words[id-1].children:
-            if sentence.words[child-1].deprel not in ['cc', 'conj', 'punct']:
+        for child in sentence.words[head-1].children:
+            if sentence.words[child-1].deprel not in ['cc', 'punct'] \
+                    and sentence.words[child-1] != coord['R']\
+                    and child not in conj_list:
                 conjunct.append(child)
 
         keep_looking = True
@@ -63,7 +64,7 @@ def middle_conjuncts(conj_list, sentence):
                     conjunct.append(i)
                 else:
                     keep_looking = False
-        conjunct.append(id)
+        conjunct.append(head)
         conjunct.sort()
 
         # removes some of the punctuation from the beginning of the conjunct
@@ -233,57 +234,10 @@ def extract_coords(doc, marker='', conll_list=None, id_list=None):
                         break
                 coord_info(coord, sent, 'R')
                 coord_info(coord, sent, 'L')
-                coord['middle_conjuncts'] = middle_conjuncts(coord['other_conjuncts'], sent)
+                coord['conj_lengths'] = [(coord['Lwords'], len(coord['Lconj']))] + middle_conjuncts(coord, sent) + \
+                                        [(coord['Rwords'], len(coord['Rconj']))]
                 coord['sentence'] = sent.text
                 coord['sent_id'] = sent.sent_id
                 coordinations.append(coord)
 
-    return coordinations
-
-
-def extract_coords_from_conll(doc):
-    coordinations = []
-    for sent in tqdm(doc.sentences):
-        # updating sentence count so that it corresponds to the sentence ids in the source .tsv file
-        dep_children(sent)
-        word_indexer(sent)
-
-        coords = []  # previously conjs
-        # every word that has a conj dependency becomes a key in the conjs dictionary, its values are all words that are
-        # connected to the key with a conj dependency
-        for dep in sent.dependencies:
-            if 'conj' in dep[1]:
-                coord = [dep[0].id] + coord_finder(sent, dep[2])
-                coords.append(coord)
-
-        rem = []
-        for i, coord in enumerate(coords):
-            coord = list(dict.fromkeys(coord))
-            for coord2 in coords:
-                if set(coord).intersection(set(coord2)) == set(coord) and coord != coord2:
-                    rem.append(i)
-                    break
-
-        for r in reversed(rem):
-            coords.remove(coords[r])
-
-        # this loop writes down information about every coordination based on the list of elements of a coordination
-        for crd in coords:
-            if len(crd) > 1:
-                crd.sort()
-                coord = {'L': sent.words[min(crd) - 1], 'R': sent.words[max(crd) - 1]}
-                crd.pop(0)
-                crd.pop(-1)
-                coord['other_conjuncts'] = crd
-                if coord['L'].head != 0:
-                    coord['gov'] = sent.words[coord['L'].head - 1]
-                for child in coord['R'].children:
-                    if sent.words[child - 1].deprel == 'cc':
-                        coord['conj'] = sent.words[child - 1]
-                        break
-                coord_info(coord, sent, 'R')
-                coord_info(coord, sent, 'L')
-                coord['sentence'] = sent.text
-                coord['sent_id'] = sent.sent_id
-                coordinations.append(coord)
     return coordinations

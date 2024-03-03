@@ -43,4 +43,5 @@ def run(filename):
     print('csv created!')
 
 
-run('test_acad_2137.tsv')
+for file in args.f:
+    run(file)
