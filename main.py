@@ -8,41 +8,39 @@ from output_files import *
 
 
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument('-f', nargs='+')
+arg_parser.add_argument('-f', nargs='+') # list files to be processed
+arg_parser.add_argument('-p', action='store_true') # parsed flag, if the input are conllu files
 args = arg_parser.parse_args()
 
 
-def run(path):
-    txts, id_list, genre, year, source = chunker(path)
-    crds_full_list = []
-    conll_list = []
+def run(filename):
+    if args.p:
+        print('loading the .conllu file...')
+        s = datetime.now()
+        doc = CoNLL.conll2doc(os.getcwd() + '/files/' + filename)
+        e = datetime.now()
+        print('loaded, that took ' + str(e - s))
 
-    # extracts coordinations one chunk at a time
-    for mrk in tqdm(txts.keys()):
-        coordinations = extract_coords(txts[mrk], mrk, conll_list, id_list)
-        crds_full_list += coordinations
+        genre = re.search('acad|news|fic|mag|blog|web|tvm', filename).group()
+        year = re.search('[0-9]+', filename).group()
 
-    print('creating a csv...')
-    create_csv(crds_full_list, genre, year, source)
+        coordinations = extract_coords(doc)
+    else:
+        txts, id_list, genre, year, source = chunker(filename)
+        coordinations = []
+        conll_list = []
+
+        for mrk in tqdm(txts.keys()):
+            doc = nlp(txts[mrk])
+            coordinations += extract_coords(doc, mrk, conll_list, id_list)
+
+        print('creating a .conllu file...')
+        create_conllu(conll_list, genre, year)
+        print('done!')
+
+    print('creating a .csv file...')
+    create_csv(coordinations, genre=genre, year=year, source=f'text_{genre}_{year}.txt')
     print('csv created!')
 
-    print('processing conll...')
-    create_conllu(conll_list, genre, year)
-    print('done!')
 
-
-def run_from_conll(file):
-    s = datetime.now()
-    doc = CoNLL.conll2doc(os.getcwd() + '/files/' + file)
-    e = datetime.now()
-    print(e-s)
-    coordinations = extract_coords_from_conll(doc)
-    genre = re.search('acad|news|fic|mag|blog|web|tvm', file).group()
-    year = re.search('[0-9]+', file).group()
-    print('writing to csv...')
-    create_csv(coordinations, genre=genre, year=year, source=f'text_{genre}_{year}.txt')
-    print('done!\n' + 30*'--')
-
-
-# run('split_acad_2014.tsv')
-# run_from_conll('kontr_sud_fic_2046.conllu')
+run('test_acad_2137.tsv')

@@ -48,6 +48,36 @@ def word_indexer(sentence):
         current_id = match.end() + current_id
 
 
+def middle_conjuncts(conj_list, sentence):
+    conjunct_lengths = []
+    for id in conj_list:
+        conjunct = []
+        for child in sentence.words[id-1].children:
+            if sentence.words[child-1].deprel not in ['cc', 'conj', 'punct']:
+                conjunct.append(child)
+
+        keep_looking = True
+        while keep_looking and conjunct:
+            for id in conjunct:
+                for i in sentence.words[id - 1].children:
+                    conjunct.append(i)
+                else:
+                    keep_looking = False
+        conjunct.append(id)
+        conjunct.sort()
+
+        # removes some of the punctuation from the beginning of the conjunct
+        while sentence.words[min(conjunct) - 1].text in [',', ';', '-', ':', '--']:
+            conjunct.remove(min(conjunct))
+
+        txt = sentence.text[sentence.words[min(conjunct) - 1].start - sentence.words[0].start:
+                            sentence.words[max(conjunct) - 1].end - sentence.words[0].start]
+
+        conjunct_lengths.append((len(conjunct), len(txt)))
+
+    return conjunct_lengths
+
+
 def coord_info(crd, sent, conj):
     """
     collects information on elements of a coordination: text of the conjunct, number of words, tokens and syllables
@@ -101,7 +131,7 @@ def coord_info(crd, sent, conj):
 
     # removes some of the punctuation from the beginning of the conjunct
     while (sent.words[min(txt_ids)-1].text in [',', ';', '-', ':', '--']
-           or sent.words[min(txt_ids)-1].deprel == 'cc'):
+           or (sent.words[min(txt_ids)-1].deprel == 'cc' and sent.words[min(txt_ids)-1] not in [crd['L'], crd['R']])):
         txt_ids.remove(min(txt_ids))
 
     words = 0
@@ -138,20 +168,26 @@ def coord_finder(sentence, conjunct):
     return conjuncts
 
 
-def extract_coords(src, marker, conll_list, id_list):
+def extract_coords(doc, marker='', conll_list=None, id_list=None):
     """
     finds coordinations in a given text, creates a conllu file containing every sentence with a found coordination
     :param src: text to parse
     :param marker: marker of the parsed text
     :param conll_list: list for sentences, to later create a conllu file corresponding to the table of coordinations
-    :param sentence_count: counts how many sentences from the whole source file have been parsed
-    :return: list of dictionaries representing coordinations, the number of sentences that were already processed
+    :param id_list: list of ids of sentences in the document
+    :return: list of dictionaries representing coordinations
     """
-    torch.cuda.empty_cache()
-    doc = nlp(src)
+    if marker == '' and conll_list is None and id_list is None:
+        preparsed = True
+        conll_list = []
+        id_list = []
+    else:
+        preparsed = False
+
     coordinations = []
     for sent in doc.sentences:
-        index = id_list[marker].pop()
+        if not preparsed:
+            index = id_list[marker].pop()
         # updating sentence count so that it corresponds to the sentence ids in the source .tsv file
         dep_children(sent)
         word_indexer(sent)
@@ -174,11 +210,11 @@ def extract_coords(src, marker, conll_list, id_list):
         for r in reversed(to_remove):
             coords.remove(coords[r])
 
-        if coords:
+        if not preparsed and coords:
             # if there are any valid conj dependencies in a sentence, it will be included in the .conllu file
             # a sentence id including the @@ marker from COCA source files is assigned and will be both in the .conllu
             # and .csv file
-            sent.coca_sent_id = str(marker) + '-' + str(index)
+            sent.sent_id = str(marker) + '-' + str(index)
             conll_list.append(sent)
 
         # this loop writes down information about every coordination based on the list of elements of a coordination
@@ -197,8 +233,9 @@ def extract_coords(src, marker, conll_list, id_list):
                         break
                 coord_info(coord, sent, 'R')
                 coord_info(coord, sent, 'L')
+                coord['middle_conjuncts'] = middle_conjuncts(coord['other_conjuncts'], sent)
                 coord['sentence'] = sent.text
-                coord['sent_id'] = sent.coca_sent_id
+                coord['sent_id'] = sent.sent_id
                 coordinations.append(coord)
 
     return coordinations

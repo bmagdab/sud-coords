@@ -25,6 +25,6 @@ nlp = stanza.Pipeline(**config)
 #
 # create_conllu(sents, genre, year)
 
-doc = nlp('John, Mary or her brother and Peter will come.')
+doc = nlp('Victimized children are more likely to develop depression and/or experience low self-esteem, physical health problems, alcohol or drug abuse, school absences and avoidance, self-harm, and suicidal ideation as compared to children who have not been victimized (Brunstein, Marrocco, Kleinman, Schonfeld, &amp; Gould, 2007; Fekkes, Pijpers, &amp; Verloove-Vanhorick, 2006).')
 CoNLL.write_doc2conll(doc, "files/output.conllu")
 
