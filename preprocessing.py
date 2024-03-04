@@ -22,7 +22,7 @@ def chunker(src):
     df.dropna()
     filtered1 = df[df["SENT"].str.contains("TOOLONG") == False]
     filtered2 = filtered1[filtered1["SENT"].str.match(r"^ *\d[\d ]*$") == False]
-    filtered2.to_csv(src, sep="\t", quoting=csv.QUOTE_NONE, lineterminator="\n", index=None)
+    filtered2.to_csv(path, sep="\t", quoting=csv.QUOTE_NONE, lineterminator="\n", index=None)
     # ------
 
     df = pd.read_csv(path, sep='\t', quoting=csv.QUOTE_NONE, lineterminator='\n', quotechar='"')
