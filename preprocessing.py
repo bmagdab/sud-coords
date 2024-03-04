@@ -44,7 +44,7 @@ def chunker(src):
             m = re.match('@@[0-9]+', str(marker))
 
             texts[m.group()] = txt
-            txt = clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
+            txt = clean(re.sub(' +', ' ', str(df.iloc[x, 1]))) + '\n\n'
 
             sent_ids[m.group()] = deque(reversed(id_list))
             id_list = [int(df.loc[x][0])]
@@ -54,7 +54,7 @@ def chunker(src):
         elif marker != re.match('@@[0-9]+', str(df.loc[x][5])).group():
             # if this is the first marker in the file, it's just written down for later
             marker = re.match('@@[0-9]+', str(df.loc[x][5])).group()
-            txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
+            txt += clean(re.sub(' +', ' ', str(df.iloc[x, 1]))) + '\n\n'
             id_list.append(int(df.loc[x][0]))
 
         else:

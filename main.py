@@ -47,10 +47,9 @@ def run(filename):
 
 def just_parse(filename):
     # will this work without assigning sent_id? let's see
+    print('processing ' + filename)
     txts, id_list, genre, year, source = chunker(filename)
     conll_list = deque()
-
-    print('processing ' + filename)
 
     for mrk in tqdm(txts.keys()):
         doc = nlp(txts[mrk])
@@ -70,7 +69,7 @@ if args.d:
         if len(year) == 1:
             year = '0' + year
 
-        if f'sud_{genre}_{year}.csv' in os.listdir(os.getcwd() + '/out_files/'):
+        if f'sud_{genre}_{year}.conllu' in os.listdir(os.getcwd() + '/out_files/'):
             continue
         else:
             just_parse(file)
