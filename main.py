@@ -1,6 +1,7 @@
 from datetime import datetime
 import argparse
 from stanza.utils.conll import CoNLL
+from collections import deque
 
 from preprocessing import *
 from extract_coords import *
@@ -43,5 +44,20 @@ def run(filename):
     print('csv created!')
 
 
+def just_parse(filename):
+    # will this work without assigning sent_id? let's see
+    txts, id_list, genre, year, source = chunker(filename)
+    conll_list = deque()
+
+    for mrk in tqdm(txts.keys()):
+        doc = nlp(txts[mrk])
+        for sent in doc.sentences:
+            sent.sent_id = f'{mrk}-{id_list[mrk].pop()}'
+            conll_list.append(sent)
+
+    create_conllu(conll_list, genre, year)
+
+
 for file in args.f:
-    run(file)
+    # run(file)
+    just_parse(file)
