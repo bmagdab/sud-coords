@@ -11,6 +11,7 @@ from output_files import *
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-f', nargs='+') # list files to be processed
 arg_parser.add_argument('-p', action='store_true') # parsed flag, if the input are conllu files
+arg_parser.add_argument('-d', action='store_true') # processes the whole directory
 args = arg_parser.parse_args()
 
 
@@ -49,15 +50,31 @@ def just_parse(filename):
     txts, id_list, genre, year, source = chunker(filename)
     conll_list = deque()
 
+    print('processing ' + filename)
+
     for mrk in tqdm(txts.keys()):
         doc = nlp(txts[mrk])
         for sent in doc.sentences:
             sent.sent_id = f'{mrk}-{id_list[mrk].pop()}'
             conll_list.append(sent)
 
+    print('writing conllu...')
     create_conllu(conll_list, genre, year)
 
 
-for file in args.f:
-    # run(file)
-    just_parse(file)
+if args.d:
+    for file in os.listdir(os.getcwd() + '/files/'):
+        # check if this file has already been processed
+        genre = re.search('acad|news|fic|mag|blog|web|tvm', file).group()
+        year = re.search('[0-9]+', file).group()
+        if len(year) == 1:
+            year = '0' + year
+
+        if f'sud_{genre}_{year}.csv' in os.listdir(os.getcwd() + '/out_files/'):
+            continue
+        else:
+            just_parse(file)
+else:
+    for file in args.f:
+        # run(file)
+        just_parse(file)

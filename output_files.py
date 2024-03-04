@@ -23,7 +23,7 @@ def create_conllu(sent_list, genre, year):
             sent_conll.extend(token.to_conll_text().split('\n'))
         doc_conll.append(sent_conll)
 
-    path = os.getcwd() + '/files/sud_' + str(genre) + '_' + str(year) + '.conllu'
+    path = os.getcwd() + '/out_files/sud_' + str(genre) + '_' + str(year) + '.conllu'
     with open(path, mode='w', encoding='utf-8') as conll_file:
         for sent in doc_conll:
             for line in sent:
@@ -40,7 +40,7 @@ def create_csv(crd_list, genre, year, source):
     :param source: name of the source file
     :return: nothing
     """
-    path = os.getcwd() + '/files/sud_' + str(genre) + '_' + str(year) + '.csv'
+    path = os.getcwd() + '/out_files/sud_' + str(genre) + '_' + str(year) + '.csv'
     with open(path, mode='w', newline="", encoding='utf-8-sig') as outfile:
         writer = csv.writer(outfile)
         col_names = ['governor.position', 'governor.word', 'governor.tag', 'governor.pos', 'governor.ms',
