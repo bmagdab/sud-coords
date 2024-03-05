@@ -39,7 +39,15 @@ def chunker(src):
     source = df.iloc[1, 4]
 
     for x in tqdm(range(len(df))):
-        if marker != re.match('@@[0-9]+', str(df.loc[x][5])).group() and marker != '':
+        try:
+            re.match('@@[0-9]+', str(df.loc[x][5])).group()
+        except AttributeError:
+            print(df.loc[x])
+        if re.match('@@FOO@', str(df.loc[x][5])):
+            # one weird marker idk whats up with that
+            txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
+            id_list.append(int(df.loc[x][0]))
+        elif marker != re.match('@@[0-9]+', str(df.loc[x][5])).group() and marker != '':
             # if there's a new @@ marker, a new entry in the dictionary is created
             m = re.match('@@[0-9]+', str(marker))
 
@@ -59,7 +67,11 @@ def chunker(src):
 
         else:
             txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
-            id_list.append(int(df.loc[x][0]))
+            try:
+                id_list.append(int(df.loc[x][0]))
+            except ValueError:
+                print(df.loc[x])
+                quit()
 
     m = re.match('@@[0-9]+', str(marker))
     texts[m.group()] = txt
