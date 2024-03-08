@@ -2,17 +2,20 @@
 % tesniere came up with a somewhat new (panini 600bc) way of creating a syntactic annotation. here are some basic ideas behind it, maybe why it could be useful
 The first full-fledged dependency grammar was proposed by \cite{tesniere}. One of the key ideas included in his work, was that a sentence is not comprised solely of its words, but also of the connections between them -- dependencies. The connections he proposed were directed, therefore one of the words is always a governor (head) and the other is a dependent. Another crucial element of Tesnière's approach was verb centrality -- the verb is the root of every sentence structure in dependency grammar. 
 
+\begin{center}
 \begin{exe}
-    \ex
-    \label{ex:tesniere}
+	\ex\atcenter{
+	\label{ex:tesniere}
     \begin{dependency}[theme = simple]
     \begin{deptext}
-        Alfred\&speaks\&slowly.\\
+        Alfred\& speaks\& slowly.\\
     \end{deptext}
     \depedge{2}{1}{}
     \depedge{2}{3}{}
     \end{dependency}
+    }
 \end{exe}
+\end{center}
 
 % do i have to say it was used by tesniere? how do i say it?
 Tesnière as an example used the sentence \textsl{Alfred speaks slowly}, for which a dependency tree is shown in (\ref{ex:tesniere}). It visualises the rules described above -- all of the words in a sentence are connected, those connections are directed and the verb is central the whole structure. 
@@ -398,7 +401,7 @@ So as not to lose this information while converting the annotation scheme, featu
 
 While the work described here is not based on the conversion code itself, this information still might prove itself useful. The parser was trained on SUD corpora, therefore it might be able to provide additional clues as to which dependents are shared and which are private. 
 
-\subsection{Learnability of dependency schemes}
+\subsection{Learnability of dependency schemes}\label{sec:learnability}
 % in pbg23 they tried to use ud but failed (50.1%)
 The current study is another replication of \cite{prz:woz:23}. As was pointed out in Chapter \ref{ch:introduction}, \cite{pbg2023} have conducted identical analysis on the COCA corpus annotated automatically in the UD scheme. After evaluating the automatically annotated data they found only 50.1\% of the coordinations in the evaluation sample to be correctly extracted from the corpus. Reason for such an outcome can be twofold: the issues lie either within the parsing accuracy or the script for extracting coordinations from dependency trees. 
 
