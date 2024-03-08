@@ -46,7 +46,6 @@ def run(filename):
 
 
 def just_parse(filename):
-    # will this work without assigning sent_id? let's see
     print('processing ' + filename)
     txts, id_list, genre, year, source = chunker(filename)
     conll_list = deque()
@@ -72,7 +71,11 @@ if args.d:
         if f'sud_{genre}_{year}.conllu' in os.listdir(os.getcwd() + '/out_files/'):
             continue
         else:
-            just_parse(file)
+            try:
+                # run(file)
+                just_parse(file)
+            except Exception:
+                continue
 else:
     for file in args.f:
         # run(file)
