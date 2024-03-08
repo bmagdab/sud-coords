@@ -13,9 +13,18 @@ config = {
 }
 nlp = stanza.Pipeline(**config)
 
-doc = nlp('This magma often does not reach the surface but cools at depth.')
-CoNLL.write_doc2conll(doc, "test_files/output.conllu")
+# reading raw text from a file:
+# with open('test_files/spoken_test.txt', mode='r') as spok:
+#         text = spok.read()
 
+# parsing without a file:
+doc = nlp("If you're looking for a good burger, some great fries (they are too die for!), and good drinks, go to Chickie & Pete's !")
+CoNLL.write_doc2conll(doc, 'test_files/output.conllu')
+
+# reading a parsed tree from a .conllu file
+# doc = CoNLL.conll2doc('test_files/output.conllu')
+
+# latex dependency tree:
 # for sent in doc.sentences:
 #     print('\\begin{dependency}[theme = simple]\n\t\\begin{deptext}\n\t\t',
 #       *[f'{word.text}\&' if word.text != "." else f'{word.text}\\\\\n\t' for word in sent.words],
