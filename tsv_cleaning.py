@@ -1,19 +1,55 @@
 from collections import deque
 
-# with open('files/split_fic_1997.tsv', mode='r+') as file:
+# with open('files/split_news_1993.tsv', mode='r+') as file:
 #     lines = file.readlines()
-#     print(lines[29197:30000])
+#     print(lines[179009:179100])
 
-with open('files/split_fic_1997.tsv', mode='r+') as file:
+with open('files/split_news_1993.tsv', mode='r+') as file:
     lines = file.readlines()
-    dirt = ['\t - The 1004491\t\t\t\t\n']
+    dirt = ['\t in his pockets\t\t\t\t\n']
     out = deque()
     for line in lines:
         if line not in dirt:
             out.append(line)
 
-with open('files/split_fic_1997.tsv', mode='w') as file:
+with open('files/split_news_1993.tsv', mode='w') as file:
     file.writelines(out)
+
+# with open('files/split_fic_1999.tsv', mode='r+') as file:
+#     lines = file.readlines()
+#     dirt = ['\t Weirs False\t\t\t\t\n']
+#     out = deque()
+#     for line in lines:
+#         if line not in dirt:
+#             out.append(line)
+#
+# with open('files/split_fic_1999.tsv', mode='w') as file:
+#     file.writelines(out)
+
+# with open('files/split_fic_1998.tsv', mode='r+') as file:
+#     lines = file.readlines()
+#     dirt = ['\t Dentist  Pearly gray\t\t\t\t\n',
+#             '\t : Christian Fiction Section\t\t\t\t\n',
+#             '\t the preceding three paragraphs .\t\t\t\t\n',
+#             '\t Index Sources # Section : STORY\t\t\t\t\n']
+#     out = deque()
+#     for line in lines:
+#         if line not in dirt:
+#             out.append(line)
+#
+# with open('files/split_fic_1998.tsv', mode='w') as file:
+#     file.writelines(out)
+
+# with open('files/split_fic_1997.tsv', mode='r+') as file:
+#     lines = file.readlines()
+#     dirt = ['\t - The 1004491\t\t\t\t\n']
+#     out = deque()
+#     for line in lines:
+#         if line not in dirt:
+#             out.append(line)
+#
+# with open('files/split_fic_1997.tsv', mode='w') as file:
+#     file.writelines(out)
 
 # with open('files/split_fic_1996.tsv', mode='r+') as file:
 #     lines = file.readlines()

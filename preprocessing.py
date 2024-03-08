@@ -43,8 +43,8 @@ def chunker(src):
             re.match('@@[0-9]+', str(df.loc[x][5])).group()
         except AttributeError:
             print(df.loc[x])
-        if re.match('@@FOO@', str(df.loc[x][5])):
-            # one weird marker idk whats up with that
+        if re.match('@@FOO@|@@beg|@@end|@@-in|@@ 16', str(df.loc[x][5])):
+            # there are some weird markers idk whats up with that
             txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
             id_list.append(int(df.loc[x][0]))
         elif marker != re.match('@@[0-9]+', str(df.loc[x][5])).group() and marker != '':
