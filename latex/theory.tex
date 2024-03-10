@@ -4,16 +4,15 @@ The first full-fledged dependency grammar was proposed by \cite{tesniere}. One o
 
 \begin{center}
 \begin{exe}
-	\ex\atcenter{
+	\ex
 	\label{ex:tesniere}
-    \begin{dependency}[theme = simple]
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         Alfred\& speaks\& slowly.\\
     \end{deptext}
     \depedge{2}{1}{}
     \depedge{2}{3}{}
     \end{dependency}
-    }
 \end{exe}
 \end{center}
 
@@ -25,7 +24,7 @@ Dependency grammars have changed significantly since Tesnière's ideas were publ
 \begin{exe}
     \ex
     \label{ex:tesniere today}
-    \begin{dependency}[theme = simple]
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         Alfred\&speaks\&slowly.\\
     \end{deptext}
@@ -50,7 +49,7 @@ Familiarity with dependency grammars helps understand the principle of Dependenc
     \begin{xlist}
     \ex
     \label{ex:dlm janitor1}
-    \begin{dependency}[theme = simple, segmented edge]
+    \begin{dependency}[theme = simple, segmented edge, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
         The\&janitor\&threw\&out\&the\&rickety\&and\&badly\&scratched\&chair.\\
         \end{deptext}
@@ -59,7 +58,7 @@ Familiarity with dependency grammars helps understand the principle of Dependenc
 
     \ex
     \label{ex:dlm janitor2}
-    \begin{dependency}[theme = simple, segmented edge, edge height = 4ex]
+    \begin{dependency}[theme = simple, segmented edge, edge height = 4ex, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
         The\&janitor\&threw\&the\&rickety\&and\&badly\&scratched\&chair\&out.\\
         \end{deptext}
@@ -97,7 +96,7 @@ Therefore a coordination presented in (\ref{ex:govLeft}) using this set of symbo
 \begin{exe}
     \ex
     \label{ex:diagram}
-    \begin{dependency}
+    \begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             in\&[.5cm]this\&[.5cm]and\&[.5cm]so\&many\&things\\
             \\
@@ -132,7 +131,7 @@ Rules for creating a dependency structure are the most relevant part here. In th
 \begin{exe}
     \ex
     \label{ex:ud eng tree}
-    \begin{dependency}[theme = simple]
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             Ivan\&will\&participate\&in the show\&.\\
         \end{deptext}
@@ -149,7 +148,7 @@ The reasoning behind setting those criteria is that it increases the chance of f
 \begin{exe}
     \ex
     \label{ex:ud fr tree}
-    \begin{dependency}[theme = simple]
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             Ivan\&participera\&au spectacle\&.\\
         \end{deptext}
@@ -212,10 +211,11 @@ This key difference between UD and SUD has crucial consequences for extracting t
 \begin{exe}
 	\ex
 	\label{ex:UD magma}
-	\begin{dependency}[hide label]
+	
+	\begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
 	\begin{deptext}
-		 This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
-	 \end{deptext} 
+	This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
+	\end{deptext}
 	\depedge{2}{1}{det} 
 	\depedge[show label]{6}{2}{nsubj} 
 	\depedge[show label]{6}{3}{advmod} 
@@ -228,13 +228,13 @@ This key difference between UD and SUD has crucial consequences for extracting t
 	\depedge[show label, edge height=2cm]{6}{10}{conj} 
 	\depedge{12}{11}{case} 
 	\depedge[show label]{10}{12}{obl} 
-\end{dependency}
+	\end{dependency}
 \end{exe}
 
 \begin{exe}
     \ex
     \label{ex:SUD magma}
-    \begin{dependency}[hide label]
+    \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
 	\begin{deptext}
 		 This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
 	 \end{deptext} 
@@ -256,7 +256,7 @@ This key difference between UD and SUD has crucial consequences for extracting t
 \begin{exe}
     \ex
     \label{ex:UD ballet}
-    \begin{dependency}[hide label]
+    \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             Ballet\& shoes\& should\& be\& snug,\& but\& not\& so\& tight\& they\& cut\& off\& blood\& flow.\\
         \end{deptext}
@@ -280,7 +280,7 @@ This key difference between UD and SUD has crucial consequences for extracting t
 \begin{exe}
     \ex
     \label{ex:SUD ballet}
-    \begin{dependency}[hide label]
+    \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             Ballet\& shoes\& should\& be\& snug,\& but\& not\& so\& tight\& they\& cut\& off\& blood\& flow.\\
         \end{deptext}
@@ -366,7 +366,7 @@ As was mentioned in Section \ref{sec:coord annotations}, UD uses the Bouquet app
     \ex
     \label{ex:UD 1,5h straight}
     %\hspace{1cm}\\
-    \begin{dependency}[theme = simple]
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             an\&hour\&and\&a\&half\&straight\\
             \&\&\&\&\&\footnotesize\textsf{upos=ADV}\\
@@ -383,7 +383,8 @@ As was mentioned in Section \ref{sec:coord annotations}, UD uses the Bouquet app
     \ex
     \label{ex:SUD 1,5h straight}
     %\hspace{1cm}\\
-    \begin{dependency}[theme = simple]
+    \atcenter{
+    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
             an\&hour\&and\&a\&half\&straight\\
             \&\&\&\&\&\footnotesize\textsf{upos=ADV}\\
@@ -394,7 +395,7 @@ As was mentioned in Section \ref{sec:coord annotations}, UD uses the Bouquet app
         \depedge{2}{5}{conj}
         \depedge{5}{3}{cc}
         \depedge{5}{6}{mod}
-    \end{dependency}
+    \end{dependency}}
 \end{exe}
 
 So as not to lose this information while converting the annotation scheme, feature \textsf{Shared=Yes} is added. Similarly, in coordinations where a dependent is attached to the right conjunct in the UD scheme (therefore private to the right conjuct), during the conversion to SUD the feature \textsf{Shared=No} is added.
