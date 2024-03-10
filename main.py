@@ -73,10 +73,12 @@ if args.d:
         else:
             try:
                 # run(file)
+                clean_tsv(file)
                 just_parse(file)
             except Exception:
                 continue
 else:
     for file in args.f:
         # run(file)
+        clean_tsv(file)
         just_parse(file)

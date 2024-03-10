@@ -39,11 +39,10 @@ def chunker(src):
     source = df.iloc[1, 4]
 
     for x in tqdm(range(len(df))):
-        try:
-            re.match('@@[0-9]+', str(df.loc[x][5])).group()
-        except AttributeError:
-            print(df.loc[x])
-        if re.match('@@FOO@|@@beg|@@end|@@-in|@@ 16', str(df.loc[x][5])):
+        if pd.isna(df.loc[x][2]) and pd.isna(df.loc[x][3]) and pd.isna(df.loc[x][4]) and not re.match('@@[0-9]+', str(df.loc[x][5])):
+            # idk this is useless at this point
+            continue
+        if re.match('@@FOO@|@@beg|@@end|@@-in|@@ 16|@@#+|@@@#|@@ a', str(df.loc[x][5])):
             # there are some weird markers idk whats up with that
             txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
             id_list.append(int(df.loc[x][0]))
@@ -67,11 +66,7 @@ def chunker(src):
 
         else:
             txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
-            try:
-                id_list.append(int(df.loc[x][0]))
-            except ValueError:
-                print(df.loc[x])
-                quit()
+            id_list.append(int(df.loc[x][0]))
 
     m = re.match('@@[0-9]+', str(marker))
     texts[m.group()] = txt
@@ -110,3 +105,39 @@ def clean(txt):
     for i in to_remove:
         txt = txt[:i] + txt[i+1:]
     return txt
+
+
+def clean_tsv(filename):
+    """
+    if there are broken lines in the .tsv file, this fixes them
+    :param filename: name of the .tsv file
+    :return: nothing
+    """
+    with open('files/'+filename, mode='r+') as file:
+        lines = file.readlines()
+        head = lines[0]
+        lines.reverse()
+        step1 = []
+        skip = False
+        for i in range(len(lines)-1):
+            if skip:
+                skip = False
+            else:
+                match1 = re.match('\t.+', lines[i])
+                match2 = re.search('\d+[\\t]{4}\\n', lines[i+1])
+                if match1 and match2:
+                    step1.append(lines[i+1][:match2.start()] + lines[i][2:])
+                    skip = True
+                else:
+                    step1.append(lines[i])
+        step1.append(head)
+        step1.reverse()
+        out = []
+        for i, line in enumerate(step1):
+            if line.startswith('\t'):
+                out.append(str(int(re.match('\d+', step1[i-1]).group()) + 1) + line)
+            else:
+                out.append(line)
+
+    with open('files/'+filename, mode='w') as file:
+        file.writelines(out)

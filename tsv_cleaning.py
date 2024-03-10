@@ -1,19 +1,25 @@
 from collections import deque
+import re
+
+with open('files/split_mag_2005.tsv', mode='r+') as file:
+    lines = file.readlines()
+    for line in lines:
+        if re.search('\d+[\\t]{4}\\n', line):
+            print(line)
+    # print(lines[56550:56600])
+
+# '\d+[\\t]{4}\\n'
 
 # with open('files/split_news_1993.tsv', mode='r+') as file:
 #     lines = file.readlines()
-#     print(lines[179009:179100])
-
-with open('files/split_news_1993.tsv', mode='r+') as file:
-    lines = file.readlines()
-    dirt = ['\t in his pockets\t\t\t\t\n']
-    out = deque()
-    for line in lines:
-        if line not in dirt:
-            out.append(line)
-
-with open('files/split_news_1993.tsv', mode='w') as file:
-    file.writelines(out)
+#     dirt = ['\t in his pockets\t\t\t\t\n']
+#     out = deque()
+#     for line in lines:
+#         if line not in dirt:
+#             out.append(line)
+#
+# with open('files/split_news_1993.tsv', mode='w') as file:
+#     file.writelines(out)
 
 # with open('files/split_fic_1999.tsv', mode='r+') as file:
 #     lines = file.readlines()
