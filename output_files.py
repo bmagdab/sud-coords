@@ -40,6 +40,8 @@ def create_csv(crd_list, genre, year, source):
     :param source: name of the source file
     :return: nothing
     """
+    if len(year) == 1:
+        year = '0' + year
     path = os.getcwd() + '/out_files/sud_' + str(genre) + '_' + str(year) + '.csv'
     with open(path, mode='w', newline="", encoding='utf-8-sig') as outfile:
         writer = csv.writer(outfile)

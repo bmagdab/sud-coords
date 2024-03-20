@@ -1,4 +1,7 @@
 import re
+
+import numpy as np
+
 import syll
 import stanza
 from types import NoneType
@@ -61,7 +64,8 @@ def middle_conjuncts(coord, sentence):
         while keep_looking and conjunct:
             for id in conjunct:
                 for i in sentence.words[id - 1].children:
-                    conjunct.append(i)
+                    if sentence.words[i - 1].deprel != 'conj':
+                        conjunct.append(i)
                 else:
                     keep_looking = False
         conjunct.append(head)
@@ -73,6 +77,14 @@ def middle_conjuncts(coord, sentence):
 
         txt = sentence.text[sentence.words[min(conjunct) - 1].start - sentence.words[0].start:
                             sentence.words[max(conjunct) - 1].end - sentence.words[0].start]
+
+        to_rem = [] # removing punctuation, I want only words in this
+        for id in conjunct:
+            if sentence.words[id - 1].deprel == 'punct':
+                to_rem.append(id)
+
+        for id in reversed(to_rem):
+            conjunct.remove(id)
 
         conjunct_lengths.append((len(conjunct), len(txt)))
 
@@ -105,7 +117,8 @@ def coord_info(crd, sent, conj):
                 txt_ids.append(id)
                 continue
 
-            elif (id < crd['L'].id)*(conj == 'L')+(id > crd['R'].id)*(conj == 'R'):
+            elif (id < crd['L'].id)*(conj == 'L')+(id > crd['R'].id)*(conj == 'R') and \
+                    sent.words[id - 1].deprel != 'conj@emb':
                 for c in [crd['L'].id]*(conj == 'R')+crd['other_conjuncts']+[crd['R'].id]*(conj == 'L'):
                     for c_child in sent.words[c - 1].children:
                         if sent.words[c_child - 1].deprel == sent.words[id - 1].deprel:
@@ -154,31 +167,35 @@ def coord_info(crd, sent, conj):
     crd[conj+'syl'] = syllables
 
 
-def coord_finder(sentence, conjunct):
+def coord_finder(sentence, conjunct, embedded=False):
     """
     finds all the conjuncts in the coordination
     :param sentence: stanza sentence object, the sentence that contains the currently investigated coordination
     :param conjunct: stanza word object, the last known conjunct in the investigated coordination
+    :param embedded: boolean, limits how far the function goes in searching if the coordination is embedded in another
     :return:
     """
     conjuncts = [conjunct.id]
     for child in conjunct.children:
-        if 'conj' in sentence.words[child-1].deprel:
+        if not embedded and 'conj' in sentence.words[child-1].deprel:
             conjuncts.append(child)
             conjuncts = conjuncts + coord_finder(sentence, sentence.words[child-1])
+        elif embedded and 'conj@emb' == sentence.words[child-1].deprel:
+            conjuncts.append(child)
+            conjuncts = conjuncts + coord_finder(sentence, sentence.words[child - 1], embedded=True)
     return conjuncts
 
 
 def extract_coords(doc, marker='', conll_list=None, id_list=None):
     """
     finds coordinations in a given text, creates a conllu file containing every sentence with a found coordination
-    :param src: text to parse
+    :param doc: stanza document object with parsed sentences
     :param marker: marker of the parsed text
     :param conll_list: list for sentences, to later create a conllu file corresponding to the table of coordinations
     :param id_list: list of ids of sentences in the document
     :return: list of dictionaries representing coordinations
     """
-    if marker == '' and conll_list is None and id_list is None:
+    if marker == '' and not conll_list and not id_list:
         preparsed = True
         conll_list = []
         id_list = []
@@ -194,22 +211,31 @@ def extract_coords(doc, marker='', conll_list=None, id_list=None):
         word_indexer(sent)
 
         coords = []
+        embedded = []
         # every word that has a conj dependency becomes a key in the coords dictionary, its values are all words that are
         # connected to the key with a conj dependency
         for dep in sent.dependencies:
-            if 'conj' in dep[1]:
-                coord = [dep[0].id] + coord_finder(sent, dep[2])
-                coords.append(list(dict.fromkeys(coord)))
+            if re.fullmatch('conj', dep[1]):
+                coords.append(list(dict.fromkeys([dep[0].id] + coord_finder(sent, dep[2]))))
+            elif re.fullmatch('conj@emb', dep[1]):
+                embedded.append(list(dict.fromkeys([dep[0].id] + coord_finder(sent, dep[2], embedded=True))))
 
         to_remove = []
         for i, coord in enumerate(coords):
             for coord2 in coords:
                 if set(coord).intersection(set(coord2)) == set(coord) and coord != coord2:
                     to_remove.append(i)
-                    break
 
+        to_remove = list(dict.fromkeys(to_remove))
         for r in reversed(to_remove):
             coords.remove(coords[r])
+
+        for emb in embedded:
+            for i, coord in enumerate(coords):
+                if set(emb).intersection(set(coord)) == set(emb):
+                    coords[i] = list(np.concatenate((np.setdiff1d(coord, emb[1:]), np.setdiff1d(emb[1:], coord))))
+
+        coords += embedded
 
         if not preparsed and coords:
             # if there are any valid conj dependencies in a sentence, it will be included in the .conllu file

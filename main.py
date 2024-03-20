@@ -19,11 +19,11 @@ def run(filename):
     if args.p:
         print('loading the .conllu file...')
         s = datetime.now()
-        doc = CoNLL.conll2doc(os.getcwd() + '/files/' + filename)
+        doc = CoNLL.conll2doc(os.getcwd() + '/test_files/' + filename)
         e = datetime.now()
         print('loaded, that took ' + str(e - s))
 
-        genre = re.search('acad|news|fic|mag|blog|web|tvm', filename).group()
+        genre = re.search('acad|news|fic|mag|blog|web|tvm|spok', filename).group()
         year = re.search('[0-9]+', filename).group()
 
         coordinations = extract_coords(doc)
@@ -63,7 +63,7 @@ def just_parse(filename):
 if args.d:
     for file in os.listdir(os.getcwd() + '/files/'):
         # check if this file has already been processed
-        genre = re.search('acad|news|fic|mag|blog|web|tvm', file).group()
+        genre = re.search('acad|news|fic|mag|blog|web|tvm|spok', file).group()
         year = re.search('[0-9]+', file).group()
         if len(year) == 1:
             year = '0' + year
@@ -71,14 +71,16 @@ if args.d:
         if f'sud_{genre}_{year}.conllu' in os.listdir(os.getcwd() + '/out_files/'):
             continue
         else:
-            try:
-                # run(file)
-                clean_tsv(file)
-                just_parse(file)
-            except Exception:
-                continue
+            clean_tsv(file)
+            just_parse(file)
+            # try:
+            #     # run(file)
+            #     clean_tsv(file)
+            #     just_parse(file)
+            # except Exception:
+            #     continue
 else:
     for file in args.f:
-        # run(file)
-        clean_tsv(file)
-        just_parse(file)
+        run(file)
+        # clean_tsv(file)
+        # just_parse(file)

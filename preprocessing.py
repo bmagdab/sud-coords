@@ -42,8 +42,8 @@ def chunker(src):
         if pd.isna(df.loc[x][2]) and pd.isna(df.loc[x][3]) and pd.isna(df.loc[x][4]) and not re.match('@@[0-9]+', str(df.loc[x][5])):
             # idk this is useless at this point
             continue
-        if re.match('@@FOO@|@@beg|@@end|@@-in|@@ 16|@@#+|@@@#|@@ a', str(df.loc[x][5])):
-            # there are some weird markers idk whats up with that
+        if not re.match('@@[0-9]+', str(df.loc[x][5])) and re.match('@@.', str(df.loc[x][5])):
+            # sometimes the markers are wrong, in those cases I ignore them
             txt += clean(re.sub(' +', ' ', str(df.loc[x][1]))) + '\n\n'
             id_list.append(int(df.loc[x][0]))
         elif marker != re.match('@@[0-9]+', str(df.loc[x][5])).group() and marker != '':
