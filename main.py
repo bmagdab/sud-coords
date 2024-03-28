@@ -19,7 +19,7 @@ def run(filename):
     if args.p:
         print('loading the .conllu file...')
         s = datetime.now()
-        doc = CoNLL.conll2doc(os.getcwd() + '/test_files/' + filename)
+        doc = CoNLL.conll2doc(os.getcwd() + '/files/' + filename)
         e = datetime.now()
         print('loaded, that took ' + str(e - s))
 
@@ -68,17 +68,10 @@ if args.d:
         if len(year) == 1:
             year = '0' + year
 
-        if f'sud_{genre}_{year}.conllu' in os.listdir(os.getcwd() + '/out_files/'):
+        if f'sud_{genre}_{year}.csv' in os.listdir(os.getcwd() + '/out_files/'):
             continue
         else:
-            # clean_tsv(file)
-            # just_parse(file)
-            try:
-                # run(file)
-                clean_tsv(file)
-                just_parse(file)
-            except Exception:
-                continue
+            run(file)
 else:
     for file in args.f:
         run(file)
