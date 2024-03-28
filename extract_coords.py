@@ -137,9 +137,10 @@ def coord_info(crd, sent, conj):
     while keep_looking and txt_ids:
         for id in txt_ids:
             for i in sent.words[id - 1].children:
-                txt_ids.append(i)
-            else:
-                keep_looking = False
+                if (conj == 'L')*(i < crd['R'].id)+(conj == 'R')*(i > crd['L'].id):
+                    txt_ids.append(i)
+        else:
+            keep_looking = False
     txt_ids.append(crd[conj].id)
     txt_ids.sort()
 

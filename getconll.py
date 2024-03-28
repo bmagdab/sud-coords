@@ -18,7 +18,7 @@ nlp = stanza.Pipeline(**config)
 #         text = spok.read()
 
 # parsing without a file:
-doc = nlp("If you're looking for a good burger, some great fries (they are too die for!), and good drinks, go to Chickie & Pete's !")
+doc = nlp("The history book on the shelf is always repeating itself.")
 CoNLL.write_doc2conll(doc, 'test_files/output.conllu')
 
 # reading a parsed tree from a .conllu file

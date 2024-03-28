@@ -71,14 +71,14 @@ if args.d:
         if f'sud_{genre}_{year}.conllu' in os.listdir(os.getcwd() + '/out_files/'):
             continue
         else:
-            clean_tsv(file)
-            just_parse(file)
-            # try:
-            #     # run(file)
-            #     clean_tsv(file)
-            #     just_parse(file)
-            # except Exception:
-            #     continue
+            # clean_tsv(file)
+            # just_parse(file)
+            try:
+                # run(file)
+                clean_tsv(file)
+                just_parse(file)
+            except Exception:
+                continue
 else:
     for file in args.f:
         run(file)
