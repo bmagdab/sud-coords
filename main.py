@@ -17,16 +17,19 @@ args = arg_parser.parse_args()
 
 def run(filename):
     if args.p:
-        print('loading the .conllu file...')
-        s = datetime.now()
-        doc = CoNLL.conll2doc(os.getcwd() + '/files/' + filename)
-        e = datetime.now()
-        print('loaded, that took ' + str(e - s))
-
         genre = re.search('acad|news|fic|mag|blog|web|tvm|spok', filename).group()
         year = re.search('[0-9]+', filename).group()
-
-        coordinations = extract_coords(doc)
+        print(f'processing {filename}')
+        with open(os.getcwd() + '/files/' + filename, mode='r') as file:
+            coordinations = []
+            text = file.read()
+            sents = text.split('\n\n')
+            sents = deque(sents)
+        for _ in tqdm(range(len(sents))):
+            sent = sents.popleft()
+            if sent: # do not process an empty string, the function below doesn't understand it
+                conllu = CoNLL.conll2doc(input_str=sent)
+                coordinations += extract_coords(conllu)
     else:
         txts, id_list, genre, year, source = chunker(filename)
         coordinations = []
