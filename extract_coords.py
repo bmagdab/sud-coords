@@ -1,5 +1,5 @@
 import re
-
+from tqdm import tqdm
 import numpy as np
 
 import syll
@@ -18,6 +18,7 @@ config = {
         'download_method': stanza.DownloadMethod.REUSE_RESOURCES
 }
 nlp = stanza.Pipeline(**config)  # Initialize the pipeline using a configuration dict
+punct_list = ['.', ',', ':', ';', '?', '!', '-', '"', "'"]
 
 
 def dep_children(sentence):
@@ -66,14 +67,18 @@ def middle_conjuncts(coord, sentence):
                 for i in sentence.words[id - 1].children:
                     if sentence.words[i - 1].deprel != 'conj':
                         conjunct.append(i)
-                else:
-                    keep_looking = False
+            else:
+                keep_looking = False
         conjunct.append(head)
         conjunct.sort()
 
         # removes some of the punctuation from the beginning of the conjunct
-        while sentence.words[min(conjunct) - 1].text in [',', ';', '-', ':', '--']:
-            conjunct.remove(min(conjunct))
+        try:
+            while sentence.words[min(conjunct) - 1].text in [',', ';', '-', ':', '--']:
+                conjunct.remove(min(conjunct))
+        except ValueError:
+            print(sentence.sent_id)
+            raise ValueError
 
         txt = sentence.text[sentence.words[min(conjunct) - 1].start - sentence.words[0].start:
                             sentence.words[max(conjunct) - 1].end - sentence.words[0].start]
@@ -178,10 +183,10 @@ def coord_finder(sentence, conjunct, embedded=False):
     """
     conjuncts = [conjunct.id]
     for child in conjunct.children:
-        if not embedded and 'conj' in sentence.words[child-1].deprel:
+        if not embedded and 'conj' in sentence.words[child-1].deprel and sentence.words[child-1].text not in punct_list:
             conjuncts.append(child)
             conjuncts = conjuncts + coord_finder(sentence, sentence.words[child-1])
-        elif embedded and 'conj@emb' == sentence.words[child-1].deprel:
+        elif embedded and 'conj@emb' == sentence.words[child-1].deprel and sentence.words[child-1].upos not in punct_list:
             conjuncts.append(child)
             conjuncts = conjuncts + coord_finder(sentence, sentence.words[child - 1], embedded=True)
     return conjuncts
@@ -211,14 +216,27 @@ def extract_coords(doc, marker='', conll_list=None, id_list=None):
         dep_children(sent)
         word_indexer(sent)
 
+        # there are some foreign sentences in COCA?! i don't want to look at those
+        # if more than half of the words in the sentence are found to be foreign, i skip this sentence
+        foreign = 0
+        skip = False
+        for word in sent.words:
+            if word.feats and re.search('Foreign=Yes', word.feats):
+                foreign += 1
+                if foreign > len(sent.words)/2:
+                    skip = True
+                    break
+        if skip:
+            continue
+
         coords = []
         embedded = []
         # every word that has a conj dependency becomes a key in the coords dictionary, its values are all words that are
         # connected to the key with a conj dependency
         for dep in sent.dependencies:
-            if re.fullmatch('conj', dep[1]):
+            if re.fullmatch('conj', dep[1]) and dep[0].text not in punct_list and dep[2].text not in punct_list:
                 coords.append(list(dict.fromkeys([dep[0].id] + coord_finder(sent, dep[2]))))
-            elif re.fullmatch('conj@emb', dep[1]):
+            elif re.fullmatch('conj@emb', dep[1]) and dep[0].text not in punct_list and dep[2].text not in punct_list:
                 embedded.append(list(dict.fromkeys([dep[0].id] + coord_finder(sent, dep[2], embedded=True))))
 
         to_remove = []
@@ -250,6 +268,10 @@ def extract_coords(doc, marker='', conll_list=None, id_list=None):
             if len(crd) > 1:
                 crd.sort()
                 coord = {'L': sent.words[min(crd) - 1], 'R': sent.words[max(crd) - 1]}
+                if coord['L'].upos in ['SYM', 'PUNCT'] or coord['R'].upos in ['SYM', 'PUNCT']:
+                    # i'm not interested in "coordinations" of symbols or punctuation, but it can be found as a result
+                    # of a parsing mistake
+                    continue
                 crd.pop(0)
                 crd.pop(-1)
                 coord['other_conjuncts'] = crd
