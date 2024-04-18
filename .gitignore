@@ -8,3 +8,6 @@ test_files/
 out_files/
 latex/
 splity/
+eval/
+ud_vs_sud/
+results_stanza_final_sorted.csv
