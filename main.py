@@ -2,17 +2,45 @@ from datetime import datetime
 import argparse
 from stanza.utils.conll import CoNLL
 from collections import deque
-
+import stanza
 from preprocessing import *
 from extract_coords import *
 from output_files import *
-
 
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument('-f', nargs='+') # list files to be processed
 arg_parser.add_argument('-p', action='store_true') # parsed flag, if the input are conllu files
 arg_parser.add_argument('-d', action='store_true') # processes the whole directory
+arg_parser.add_argument('-s', action='store_true') # use the sud models
 args = arg_parser.parse_args()
+
+
+if args.s and not args.p:
+    config = {
+        'processors': 'tokenize,pos,lemma,depparse',
+        'lang': 'en',
+        'use_gpu': True,
+        'pos_model_path': './saved_models/en_combined-sud_charlm_tagger.pt',
+        'depparse_model_path': './saved_models/en_combined-sud_charlm_parser.pt',
+        'tokenize_pretokenized': False,
+        'tokenize_no_ssplit': True,
+        'download_method': stanza.DownloadMethod.REUSE_RESOURCES
+    }
+    nlp = stanza.Pipeline(**config)  # Initialize the pipeline using a configuration dict
+    print('using sud model')
+elif not args.p:
+    config = {
+        'processors': 'tokenize,pos,lemma,depparse',
+        'lang': 'en',
+        'use_gpu': True,
+        'pos_model_path': './saved_models/en_compare-ud_charlm_tagger.pt',
+        'depparse_model_path': './saved_models/en_compare-ud_charlm_parser.pt',
+        'tokenize_pretokenized': False,
+        'tokenize_no_ssplit': True,
+        'download_method': stanza.DownloadMethod.REUSE_RESOURCES
+    }
+    nlp = stanza.Pipeline(**config)
+    print('using ud model')
 
 
 def run(filename):

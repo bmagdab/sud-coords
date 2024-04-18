@@ -1,23 +1,10 @@
 import re
 from tqdm import tqdm
 import numpy as np
-
 import syll
-import stanza
 from types import NoneType
 
 
-config = {
-        'processors': 'tokenize,pos,lemma,depparse',
-        'lang': 'en',
-        'use_gpu': True,
-        'pos_model_path': './saved_models/en_combined-sud_charlm_tagger.pt',
-        'depparse_model_path': './saved_models/en_combined-sud_charlm_parser.pt',
-        'tokenize_pretokenized': False,
-        'tokenize_no_ssplit': True,
-        'download_method': stanza.DownloadMethod.REUSE_RESOURCES
-}
-nlp = stanza.Pipeline(**config)  # Initialize the pipeline using a configuration dict
 punct_list = ['.', ',', ':', ';', '?', '!', '-', '"', "'"]
 
 
