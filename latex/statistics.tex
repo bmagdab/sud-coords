@@ -1,0 +1,24 @@
+\section{UD and SUD model comparison}
+The first hypothesis this work aims to verify is that the parsing model trained to annotate in the SUD scheme will perform better than the one annotating in the UD scheme. The models were evaluated using the modified version of the \texttt{conll18\_ud\_eval.py} script, same as the one used by \cite{tuo:prz:lac:21}. Scripts used to evaluate their results are available in the github repository related to their study\footnote{\url{https://github.com/ryszardtuora/ud_vs_sud}} and were adapted here to fit the current experiment. 
+
+The difference between the official \texttt{conll18\_ud\_eval.py} script and the one used by \cite{tuo:prz:lac:21} is the treatment of colons in dependency labels. In UD labels only contain colons if there is language-specific informaion added to the basic label (e.g. \texttt{advmod:arg}) -- this information is discarded by the original evaluation script. Because of that, the script is not appropriate for SUD data, since in this scheme colons are included in some of the basic dependency labels (e.g. comp:obj). Discarding the part of the label after the colon leads to false evaluation results. 
+
+Unlabelled and labelled attachment scores (UAS and LAS) are presented in Table \ref{tab:mcnemar}, along with the absolute difference between them. Both of the differences are significant and in both cases it is in favour of the UD model. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|| c c c | c c c ||}
+\hline
+& UAS & & & LAS & \\
+\hline
+UD & SUD & $\Delta$ & UD & SUD & $\Delta$ \\
+\hline \hline
+89.75 & 88.95 & \textbf{0.8} & 87.29 & 86.80 & \textbf{0.49} \\
+\hline
+\end{tabular}
+\caption{Attachment scores for the models trained on combined UD and SUD corpora and the difference between them}
+\label{tab:mcnemar}
+\end{table}
+
+\section{Governor's impact on the coordination}
+The second hypothesis stated here is that the position of the governor of the coordination influences the placement of the shorter conjunct. Specifically, if the governor is on the left of the coordinate structure, or missing altogether, the left conjunct will be shorter than the right one. The oppostie will be true when the governor is on the right. 

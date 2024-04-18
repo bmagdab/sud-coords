@@ -206,12 +206,12 @@ It is not always possible to test both of the words within a dependency, but in 
 % why is that important for me -- give an example of a sentence with a coordination where one of the conjuncts has an auxiliary dependency, which would be troubling to decipher automatically using UD, but not SUD
 This key difference between UD and SUD has crucial consequences for extracting the exact length of conjuncts in a coordinate structure, which is an integral part of this work. As \cite{prz:woz:23} mention, the UD scheme is not ideal for coordination analysis, as it is not clear which dependencies are shared by the conjuncts and which are private. This is clearly illustrated by the example sentence \textsl{Never drink and drive}, where a human parser knows that the word \textsl{never} applies to both conjuncts of a coordination, but this would not be obvious to an algorithm. As shown in \cite{pbg2023}, some heuristics can be employed to find the extents of conjuncts, but they can fail in some cases. It might however be easier to construct accurate heuristics when working with a more syntax-focused annotation scheme than UD, such as SUD. 
 
-%This is illustrated by sentences (\ref{ex:UD father}) and (\ref{ex:UD ballet}), which are shortened versions of two sentences from the GUM corpus (\texttt{GUM\_whow\_ballet-14} and \texttt{GUM\_fiction\_beast-36} respectively) annotated in UD (above the sentence) and in SUD (below the sentence). Some dependencies are not labelled and \texttt{punct} dependencies have been omitted for better clarity of the structures.
+Based on heuristics used by \cite{pbg2023}, the tree in (\ref{ex:UD magma}) would give a coordination with conjuncts \textsl{reach the surface} and \textsl{cools at depth}. That would be, because the head of the left conjunct, \textsl{reach}, has on its left side dependencies labeled \texttt{nsubj}, \texttt{advmod} and \texttt{aux}, but the head of the right conjunct, \textsl{cools}, does not have any of those dependencies. Therefore all of those dependencies have to be shared by both conjuncts. The correct parse of this sentence gives a coordination with conjuncts \textsl{does not reach the surface} and \textsl{cools at depth}, so the dependencies \textsl{This magma often} should not be shared, but private to the first conjunct. 
 
+\begin{figure}
 \begin{exe}
 	\ex
 	\label{ex:UD magma}
-	
 	\begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
 	\begin{deptext}
 	This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
@@ -229,28 +229,6 @@ This key difference between UD and SUD has crucial consequences for extracting t
 	\depedge{12}{11}{case} 
 	\depedge[show label]{10}{12}{obl} 
 	\end{dependency}
-\end{exe}
-
-\begin{exe}
-    \ex
-    \label{ex:SUD magma}
-    \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
-	\begin{deptext}
-		 This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
-	 \end{deptext} 
-	\depedge{2}{1}{det} 
-	\depedge[show label]{4}{2}{subj} 
-	\depedge[show label]{4}{3}{mod} 
-	\deproot[show label, edge height=2cm]{4}{root} 
-	\depedge{4}{5}{mod} 
-	\depedge{4}{6}{comp:aux} 
-	\depedge{8}{7}{det} 
-	\depedge{6}{8}{comp:obj} 
-	\depedge[show label]{10}{9}{cc} 
-	\depedge[show label, edge height=1.5cm]{4}{10}{conj} 
-	\depedge[show label]{10}{11}{udep} 
-	\depedge{11}{12}{comp:obj} 
-\end{dependency}
 \end{exe}
 
 \begin{exe}
@@ -276,6 +254,35 @@ This key difference between UD and SUD has crucial consequences for extracting t
         \depedge{14}{13}{compound}
 	\end{dependency}
 \end{exe}
+\caption{Sentences \texttt{w01031015} from the \texttt{UD\_English-PUD} corpus and \texttt{GUM\_whow\_ballet-14} from the \texttt{UD\_English-GUM} corpus respectively, modified slightly for clarity.}
+\end{figure}
+
+Modifying the heuristics, so that they fit this example, for instance by saying that \texttt{aux} dependencies should always be included in the left conjunct, would on the other hand mean that sentences such as in (\ref{ex:UD ballet}) would have incorrect extracted coordinations. In this example the correct coordinate structure has conjuncts \textsl{snug} and \textsl{not so tight they cut off blood flow}, but was the algorithm to include the \texttt{aux} dependency in the first conjunct (as would be required in (\ref{ex:UD magma})), the result would be conjuncts \textsl{should be snug} and \textsl{not so tight they cut off blood flow}.
+
+This however is not an issue when using the SUD scheme. As shown in (\ref{ex:SUD magma}), the words \textsl{does not} cannot be dependencies of the whole coordination, because the word \textsl{does} is the head of the left conjunct and the word \textsl{not} is one of its dependencies on the right and thus is always included in the conjunct. Changing the annotation scheme to SUD does not affect the sentence in (\ref{ex:UD ballet}) -- the word \textsl{snug} has to be the whole left conjunct, because it also does not have any dependencies in this annotation scheme.
+
+\begin{figure}
+\begin{exe}
+    \ex
+    \label{ex:SUD magma}
+    \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
+	\begin{deptext}
+		 This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
+	 \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge[show label]{4}{2}{subj} 
+	\depedge[show label]{4}{3}{mod} 
+	\deproot[show label, edge height=2cm]{4}{root} 
+	\depedge{4}{5}{mod} 
+	\depedge{4}{6}{comp:aux} 
+	\depedge{8}{7}{det} 
+	\depedge{6}{8}{comp:obj} 
+	\depedge[show label]{10}{9}{cc} 
+	\depedge[show label, edge height=1.5cm]{4}{10}{conj} 
+	\depedge[show label]{10}{11}{udep} 
+	\depedge{11}{12}{comp:obj} 
+\end{dependency}
+\end{exe}
 
 \begin{exe}
     \ex
@@ -300,60 +307,8 @@ This key difference between UD and SUD has crucial consequences for extracting t
 		\depedge{14}{13}{compound}
     \end{dependency}
 \end{exe}
-
-Based on heuristics used by \cite{pbg2023}, the tree in (\ref{ex:UD magma}) would give a coordination with conjuncts \textsl{go near my father} and \textsl{kept my hand in my pocket}. That would be, because the head of the left conjunct, \textsl{go}, has on its left side a dependency labeled \texttt{aux} and the head of the right conjunct, \textsl{kept} does not have a dependency like this one, therefore \texttt{aux} has to be shared by both conjuncts. The correct parse of this sentence gives a coordination with conjuncts \textsl{did not go near my father} and \textsl{kept my hand in my pocket}, so the dependencies \textsl{did not} should not be shared, but private to the first conjunct. 
-
-Modifying the heuristics, so that they fit this example, for instance by saying that \texttt{aux} dependencies should always be included in the left conjunct, would on the other hand mean that sentences such as in (\ref{ex:UD ballet}) would have incorrect extracted coordinations. In this example the correct coordinate structure has conjuncts \textsl{snug} and \textsl{not so tight they cut off blood flow}, but was the algorithm to include the \texttt{aux} dependency in the first conjunct (as would be required in (\ref{ex:UD magma})), the result would be conjuncts \textsl{should be snug} and \textsl{not so tight they cut off blood flow}.
-
-This however is not an issue when using the SUD scheme. There, the words \textsl{did not} cannot be dependencies of the coordination, because it is the coordination that is dependent on the word \textsl{did}. This way it is ensured that words \textsl{did not} will not be a part of the first conjnuct and this results in the correct extraction of the coordinate structure. Changing the annotation scheme to SUD does not affect the sentence in (\ref{ex:UD ballet}) -- the word \textsl{snug} has to be the whole left conjunct, because it also does not have any dependencies in this annotation scheme.
-
-% \begin{exe}
-%     \ex
-%     \label{ex:SUD father}
-%     \begin{dependency}[theme = simple]
-%         \begin{deptext}
-%             I\&did\&not\&go\&near\&my\&father\&but\&kept\&my\&hand\&in\&my\&pocket.\\
-%         \end{deptext}
-%         \deproot{2}{}
-%         \depedge{2}{1}{}
-%         \depedge{2}{4}{comp:aux}
-%         \depedge{2}{3}{}
-%         \depedge{5}{7}{}
-%         \depedge{4}{5}{udep}
-%         \depedge{7}{6}{}
-%         \depedge{4}{9}{conj}
-%         \depedge{9}{8}{cc}
-%         \depedge{9}{11}{comp:obj}
-%         \depedge{11}{10}{}
-%         \depedge{12}{14}{}
-%         \depedge{9}{12}{udep}
-%         \depedge{14}{13}{}
-%     \end{dependency}
-% \end{exe}
-
-% \begin{exe}
-%     \ex
-%     \label{ex:SUD ballet}
-%     \begin{dependency}[theme = simple]
-%         \begin{deptext}
-%             Ballet\&shoes\&should\&be\&snug,\&but\&not\&so\&tight\&they\&cut\&off\&blood\&flow.\\
-%         \end{deptext}
-%         \deproot{3}{}
-%         \depedge{3}{2}{}
-%         \depedge{2}{1}{}
-%         \depedge{3}{4}{}
-%         \depedge{4}{5}{comp:pred}
-%         \depedge{5}{9}{conj}
-%         \depedge{9}{6}{cc}
-%         \depedge{9}{7}{mod}
-%         \depedge{9}{8}{mod}
-%         \depedge{9}{11}{mod}
-%         \depedge{11}{10}{}
-%         \depedge{11}{12}{}
-%         \depedge{11}{14}{}
-%         \depedge{14}{13}{}
-%     \end{dependency}
-% \end{exe}
+\caption{Sentences \texttt{w01031015} from the \texttt{SUD\_English-PUD} corpus and \texttt{GUM\_whow\_ballet-14} from the \texttt{SUD\_English-GUM} corpus respectively, modified slightly for clarity.}
+\end{figure}
 
 \subsection{Explicit information about shared dependencies}
 Besides the structural advantages that SUD has over UD when it comes to analysing coordination, there is one additional feature that is added in SUD treebanks that helps find the extent of conjuncts. 

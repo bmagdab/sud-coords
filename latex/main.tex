@@ -30,7 +30,12 @@
 % \makesavenoteenv{table}
 \usepackage{gb4e} % for linguistic examples
 \usepackage{multicol}
+\usepackage{paracol}
 \usepackage{changepage} % change margins for a part of a page
+%\usepackage[name = Example, 
+%	labelsep = period, 
+%	justification = centering,
+%	font=small]{caption} % for captioned dependency trees
 %\usepackage{knitr} % this is for later i think this might be useful
 
 \hypersetup{hidelinks}
@@ -39,7 +44,7 @@
 % Fancy headers
 \fancyhead{}
 \fancyhead[L]{\footnotesize Dependency structure of English coordination: a surface-syntactic approach}
-\fancyhead[R]{Chapter \thechapter }
+\fancyhead[R]{\footnotesize Chapter \thechapter }
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
 
@@ -79,6 +84,8 @@
     \input{theory}
     \chapter{Data processing}
     \input{technical}
+    \chapter{Statistical analysis}
+    \input{statistics}
 
 \bibliography{bibliography}
 
