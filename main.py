@@ -15,6 +15,10 @@ arg_parser.add_argument('-s', action='store_true') # use the sud models
 args = arg_parser.parse_args()
 
 
+if 'out_files' not in os.listdir():
+    os.mkdir('out_files')
+
+
 if args.s and not args.p:
     config = {
         'processors': 'tokenize,pos,lemma,depparse',
@@ -27,7 +31,7 @@ if args.s and not args.p:
         'download_method': stanza.DownloadMethod.REUSE_RESOURCES
     }
     nlp = stanza.Pipeline(**config)  # Initialize the pipeline using a configuration dict
-    print('using sud model')
+    print('using the sud model')
 elif not args.p:
     config = {
         'processors': 'tokenize,pos,lemma,depparse',
@@ -40,7 +44,7 @@ elif not args.p:
         'download_method': stanza.DownloadMethod.REUSE_RESOURCES
     }
     nlp = stanza.Pipeline(**config)
-    print('using ud model')
+    print('using the ud model')
 
 
 def run(filename):
@@ -59,6 +63,8 @@ def run(filename):
                 conllu = CoNLL.conll2doc(input_str=sent)
                 coordinations += extract_coords(conllu)
     else:
+        print(f'processing {filename}')
+        clean_tsv(filename)
         txts, id_list, genre, year, source = chunker(filename)
         coordinations = []
         conll_list = []
