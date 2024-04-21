@@ -1,12 +1,10 @@
 \subsection{Bouquet/Stanford}
-The bouquet structure comes from the Stanford parser \citep{de-marneffe-etal-2006-generating}. Below is a simplified illustration of such a structure\footnote{It should be mentioned that in all of the diagrams in Section \ref{sec:coord annotations} it is assumed that the head of the conjunct is its first word. Such an assumption is justified, because the work presented here is based solely on the English language, which is mostly head-initial, therefore those structures are more likely to be shaped in the way presented here, than in any other.}.
+The bouquet structure comes from the Stanford parser \citep{de-marneffe-etal-2006-generating}. \ref{ex:stanford} is a simplified illustration of such a structure.\footnote{It should be mentioned that in all of the diagrams in Section \ref{sec:coord annotations} it is assumed that the head of the conjunct is its first word. Such an assumption is justified, because the work presented here is based solely on the English language, which is mostly head-initial, therefore those structures are more likely to be shaped in the way presented here, than in any other.}
 
 \begin{exe}
-\ex\label{ex:bouquet}
-\begin{Center}
+\ex\label{ex:stanford}
 \begin{dependency}[theme = simple]
         \begin{deptext}
-        
         $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
             \end{deptext}
             \depedge{1}{2}{}
@@ -17,20 +15,21 @@ The bouquet structure comes from the Stanford parser \citep{de-marneffe-etal-200
             \wordgroup{1}{6}{8}{c2}
             \wordgroup{1}{10}{12}{c3}
         \end{dependency}
-\end{Center}
 \end{exe}
 
 There is a dependency connecting the governor of the coordination to the first conjunct, which is then connected to the heads of each conjunct, thus forming a bouquet. The conjunction is simply attached to the last conjunct in the structure. This style of annotating is one of the asymmetrical ones, since it does not treat all conjuncts of the coordination equally -- it places emphasis on the first conjunct of a coordination by making it the head of every other conjunct. 
 
+\vspace{-4ex}
 \begin{exe}
-\ex
-\label{ex:bouquet diagrams}
+\ex\label{ex:stanford-all}
 \begin{xlist}
 
+\ex
 \begin{paracol}{2}
+
+\begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov on the left, shorter conj on the left
-\ex
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
@@ -41,10 +40,11 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{2}{3}{}
     \wordgroup{1}{5}{9}{}
 \end{dependency}
+\end{minipage}
 
 \switchcolumn
 
-\ex
+\begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the left, shorter conj on the right
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
@@ -56,12 +56,16 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{2}{6}{}
     \wordgroup{1}{8}{9}{}
 \end{dependency}
+\end{minipage}
 \end{paracol}
 
-\begin{paracol}{2}
-\vfill
 \ex
+\begin{paracol}{2}
+
+\begin{minipage}[b][\treeheight]{\treewidth}
+\vfill
 % gov absent, shorter conj on the left
+\phantom{$\odot$}\hspace{\fontdimen4\font}
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
@@ -72,11 +76,13 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{1}{2}{}
     \wordgroup{1}{4}{8}{}
 \end{dependency}
+\end{minipage}
 
 \switchcolumn
 
-\ex
+\begin{minipage}[b][\treeheight]{\treewidth}
 % gov absent, shorter conj on the right
+\phantom{$\odot$}\hspace{\fontdimen4\font}
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
@@ -87,11 +93,16 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{1}{5}{}
     \wordgroup{1}{7}{8}{}
 \end{dependency}
+\end{minipage}
 \end{paracol}
 
-\begin{paracol}{2}
+
 \ex
+\begin{paracol}{2}
+
+\begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the left
+\phantom{$\odot$}\hspace{\fontdimen4\font}
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
@@ -102,11 +113,13 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{1}{2}{}
     \wordgroup{1}{4}{8}{}
 \end{dependency}
+\end{minipage}
 
 \switchcolumn
 
-\ex
+\begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the right
+\phantom{$\odot$}\hspace{\fontdimen4\font}
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
@@ -117,10 +130,13 @@ There is a dependency connecting the governor of the coordination to the first c
     \wordgroup{1}{1}{5}{}
     \wordgroup{1}{7}{8}{}
 \end{dependency}
+\end{minipage}
 \end{paracol}
 
 \end{xlist}
 \end{exe}
+
+\vspace{2ex}
 
 The diagrams in (\ref{ex:bouquet diagrams}) show how the annotation looks depending on different governor positions as well as conjunct lengths. In this particular case, the dependencies are always the shortest when the shorter conjunct is the one on the left, regardless of the position of the governor. This would suggest that, according to the DLM principle, coordinations with shorter conjuncts placed on the left would always be preferred. 
 
