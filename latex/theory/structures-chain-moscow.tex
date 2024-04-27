@@ -2,6 +2,7 @@
 Another asymmetrical approach is the chain, or Moscow one. It is utilised in the Meaning-Text Theory proposed by \cite{melcuk-1988}. 
 
 \begin{exe}
+\centering
 \ex\label{ex:moscow}
 \begin{dependency}[theme = simple]
             \begin{deptext}
@@ -19,14 +20,15 @@ Another asymmetrical approach is the chain, or Moscow one. It is utilised in the
 
 The structure is created by connecting the governor to the first conjunct of the coordination, then every element of the coordination (including the conjunction) to the next one. As the dependency between the governor and the coordination is specifically between the governor and the first conjunct, the chain approach is another example of an asymmetrical annotation style. 
 
-\vspace{-4ex}
+\vspace{-0.5\treeheight}
 \begin{exe}
 \ex\label{ex:moscow-all}
+\begin{minipage}[t]{2.5\treewidth}
 \begin{xlist}
 
-\ex
-\begin{paracol}{2}
+\begin{multicols}{2}
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov on the left, shorter conj on the left
@@ -42,8 +44,9 @@ The structure is created by connecting the governor to the first conjunct of the
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the left, shorter conj on the right
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -57,11 +60,11 @@ The structure is created by connecting the governor to the first conjunct of the
     \wordgroup{1}{8}{9}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
+
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov absent, shorter conj on the left
@@ -78,8 +81,9 @@ The structure is created by connecting the governor to the first conjunct of the
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov absent, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -94,11 +98,11 @@ The structure is created by connecting the governor to the first conjunct of the
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
+
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the left
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -114,8 +118,9 @@ The structure is created by connecting the governor to the first conjunct of the
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -130,10 +135,13 @@ The structure is created by connecting the governor to the first conjunct of the
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
 
 \end{xlist}
+\end{minipage}
 \end{exe}
+
+\vspace{0.5\treeheight}
 
 The diagrams in (\ref{ex:moscow-all}) show that, in this case, similarly to the bouquet approach, the placement of the shorter conjunct on the left should be preferred, assuming the DLM principle. The placement of the governor again does not seem to have an effect on the ordering. 
 

@@ -2,8 +2,9 @@
 The last approach discussed here is the one associated with the Prague Dependency Treebank, called the Prague approach by \cite{popel2013coordination} or the conjunction-headed by \cite{prz:woz:23}.
 
 \begin{exe}
+\centering
 \ex\label{ex:prague}
-\begin{dependency}[theme = simple]
+\begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
             \begin{deptext}
     $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
             \end{deptext}
@@ -19,14 +20,15 @@ The last approach discussed here is the one associated with the Prague Dependenc
 
 This is another example of the symmetrical styles, as here again the governor treats all of the conjuncts the same way -- in this case, it does not connect to any of them. Instead, there is a dependency connecting the governor and the conjunction, which then has the conjuncts of the coordination as its dependents. In the case of a coordination without a conjunction, the governor would connect to a punctuation mark. 
 
-\vspace{-4ex}
+\vspace{-0.5\treeheight}
 \begin{exe}
 \ex\label{ex:prague-all}
+\begin{minipage}[t]{2.5\treewidth}
 \begin{xlist}
 
-\ex
-\begin{paracol}{2}
+\begin{multicols}{2}
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov on the left, shorter conj on the left
@@ -42,8 +44,9 @@ This is another example of the symmetrical styles, as here again the governor tr
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the left, shorter conj on the right
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -57,11 +60,11 @@ This is another example of the symmetrical styles, as here again the governor tr
     \wordgroup{1}{8}{9}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
+
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov absent, shorter conj on the left
@@ -78,8 +81,9 @@ This is another example of the symmetrical styles, as here again the governor tr
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov absent, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -94,12 +98,11 @@ This is another example of the symmetrical styles, as here again the governor tr
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
 
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the left
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -115,8 +118,9 @@ This is another example of the symmetrical styles, as here again the governor tr
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -131,9 +135,12 @@ This is another example of the symmetrical styles, as here again the governor tr
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
 
 \end{xlist}
+\end{minipage}
 \end{exe}
+
+\vspace{0.5\treeheight}
 
 This annotation style again generates new predictions about the preferred ordering of conjuncts. With the governor placed on the left and without any governor present, this approach should prefer to have the shorter conjunct on the left side of the coordination. With the governor on the right, this approach predicts that ordering does not matter -- in both cases presented here the sum of dependency lengths is the same. 

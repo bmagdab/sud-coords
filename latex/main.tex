@@ -32,6 +32,8 @@
 \usepackage{multicol}
 \usepackage{paracol}
 \usepackage{changepage} % change margins for a part of a page
+\usepackage{float} % allows me to put figures in minipages
+\usepackage{caption}
 %\usepackage[name = Example, 
 %	labelsep = period, 
 %	justification = centering,
@@ -79,13 +81,13 @@
     
     \pagestyle{fancy}
     \chapter{Introduction} \label{ch:introduction}
-%    \input{introduction}
+   \input{introduction}
     \chapter{Theoretical background}
     \input{theory}
     \chapter{Data processing}
-%    \input{technical}
+   \input{technical}
     \chapter{Statistical analysis}
-%    \input{statistics}
+   \input{statistics}
 
 \bibliography{bibliography}
 

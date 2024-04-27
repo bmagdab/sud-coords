@@ -2,8 +2,9 @@
 The symmetrical approaches, as the name suggests, treat every conjunct in the coordination the same way. One of them is the multi-headed, or London approach, for which \cite{prz:woz:23} propose the name based on its appearance in Word Grammar developed by \cite{hudson-1984, hudson-2010} at University College London.
 
 \begin{exe}
+\centering
 \ex\label{ex:london}
-\begin{dependency}[theme = simple]
+\begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
             \begin{deptext}
     $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
             \end{deptext}
@@ -19,14 +20,16 @@ The symmetrical approaches, as the name suggests, treat every conjunct in the co
 
 The symmetry of the approach comes from the fact that no conjunct is distinguished by being the only direct dependent of coordinations governor. Instead, all of the conjuncts have dependencies connecting them to the governor, and the conjunction is dependent on the last conjunct, similarly to the bouquet approach.
 
-\vspace{-4ex}
+\vspace{-0.5\treeheight}
+
 \begin{exe}
 \ex\label{ex:london-all}
+\begin{minipage}[t]{2.5\treewidth}
 \begin{xlist}
 
-\ex
-\begin{paracol}{2}
+\begin{multicols}{2}
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov on the left, shorter conj on the left
@@ -42,8 +45,9 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the left, shorter conj on the right
 \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -57,11 +61,11 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
     \wordgroup{1}{8}{9}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
+
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 \vfill
 % gov absent, shorter conj on the left
@@ -78,8 +82,9 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov absent, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -94,11 +99,11 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
+
+\begin{multicols}{2}
 
 \ex
-\begin{paracol}{2}
-
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the left
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -114,8 +119,9 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
 \end{dependency}
 \end{minipage}
 
-\switchcolumn
+\columnbreak
 
+\ex
 \begin{minipage}[b][\treeheight]{\treewidth}
 % gov on the right, shorter conj on the right
 \phantom{$\odot$}\hspace{\fontdimen4\font}
@@ -130,9 +136,12 @@ The symmetry of the approach comes from the fact that no conjunct is distinguish
     \wordgroup{1}{7}{8}{}
 \end{dependency}
 \end{minipage}
-\end{paracol}
+\end{multicols}
 
 \end{xlist}
+\end{minipage}
 \end{exe}
+
+\vspace{0.5\treeheight}
 
 Here, the predictions for the preferred ordering of conjuncts are different to those in asymmetrical approaches. This annotation suggests that the placement of the governor influences the conjunct ordering, specifically that the shorter conjunct will tend to be placed near the governor: with the governor on the left, as in (\ref{ex:london-all}a--b), the dependencies are shorter with the shorter conjunct placed on the left, and with the governor on the right, as in (\ref{ex:london-all}e--f), the shorter conjunct should be placed on the right. In the case of no word governing the coordination, as in (\ref{ex:london-all}c--d), there seems to be no preference for any ordering.
