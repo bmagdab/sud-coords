@@ -18,11 +18,11 @@ nlp = stanza.Pipeline(**config)
 #         text = spok.read()
 
 # parsing without a file:
-doc = nlp("The history book on the shelf is always repeating itself.")
-CoNLL.write_doc2conll(doc, 'test_files/output.conllu')
+doc = nlp("The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution.")
+# CoNLL.write_doc2conll(doc, 'test_files/output.conllu')
 
 # reading a parsed tree from a .conllu file
-# doc = CoNLL.conll2doc('test_files/output.conllu')
+doc = CoNLL.conll2doc('test_files/output.conllu')
 
 # latex dependency tree:
 # for sent in doc.sentences:

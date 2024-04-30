@@ -1,206 +1,117 @@
-The data used in this work is based on the Corpus of Contemporary American English. The corpus consists of raw texts collected in a span of 30 years (1990 -- 2019) representing 8 styles: academic, fiction, newspapers, magazines, TV/movies, websites, blogs and spoken data. For the analysis of coordinations to be possible, first the texts have to be annotated syntactically -- here the Stanza parser was chosen for this task. The default parsing model provided for English annotates in the Universal Dependencies scheme, but as was explained earlier, the Surface-syntactic Universal Dependencies scheme is preferred here. The parser therefore had to be trained to annotate in the SUD scheme. 
-
-The current chapter has two sections: the first one describes the process of training the parsing models that created the syntactic annotation. The second one describes the procedure of finding coordinate structures in parsed sentences and creating a table with data ready for analysis. 
+The data used in this work is based on the Corpus of Contemporary American English. The corpus consists of raw texts collected in a span of 30 years (1990 -- 2019) representing 8 styles: academic, fiction, newspapers, magazines, TV/movies, websites, blogs and spoken data. For the analysis of coordinations to be possible, first the texts have to be annotated syntactically -- here the Stanza parser \citep{qi2020stanza} was chosen for this task. The first subsection of this chapter describes how the parser works and how it was trained for annotation. The second subsection describes the procedure of finding coordinate structures in parsed sentences and creating tables with data ready for analysis. 
 
 \section{Parser training}
-Training was conducted using scritps made available on github by the Stanza developers.\footnote{\url{https://github.com/stanfordnlp/stanza-train}} For the parser to learn annotation, there needs to be already annotated data. The Surface-syntactic Universal Dependencies is a much smaller project than Universal Dependencies, therefore there are not many corpora annotated natively in this scheme. Because of that, a set of graph conversion rules was developed.\footnote{\url{https://github.com/surfacesyntacticud/tools/blob/v2.12/converter/grs/UD_to_SUD.grs}} Using this conversion code, almost all of the UD corpora have been translated to SUD. 
+Stanza is a Python package intended for natural language analysis, which contains multiple processors responsible for different steps of said analysis, e.g. tokenisation, lemmatisation, part-of-speech tagging, dependency parsing, sentiment analysis. All of the processors are neural networks, which together are put into a pipeline that takes raw text as input and returns documents with parsed sentences as output. The default parsing model provided by Stanza for English annotates according to the UD scheme, therefore two processors -- part-of-speech tagger and dependency parser -- had to be trained to use the SUD scheme.
 
-Dependency trees as shown in previous chapters, though possibly comprehensible for people, are not written in a way that is easily understandable by computer programs, including parsers. Hence \cite{buchholz-marsi-2006-conll} created the CoNLL-X format. The exact purpose was to compare parser outputs in a dependency parsing shared task. Today it is widely used for representing dependency trees in a plain-text form. The UD project adapted the format to their needs by replacing some of the information included in CoNLL-X and thus creating the CoNLL-U format. In (\ref{ex:conllu}) there is an example of a SUD dependency tree presented as a tree and in the CoNLL-U format. 
+The dependency parser creates the dependency trees that can later be searched for coordinations. The part-of-speech tagger assigns the part of speech as well as the features appropriate for each word in the input. The parts of speech used in SUD are the same as in UD, but the features may include additional information about shared dependencies, as was explained in Section \ref{sec:shared-deps}. If the neural network is trained on data containing this information, it can than be able to determine which of the dependencies are shared and which are private to specific conjuncts. 
 
-\begin{adjustwidth}{-70pt}{50pt}
-\begin{exe}
-	\ex
-	\label{ex:conllu}
-	\begin{dependency}[show label]
-	\begin{deptext}[column sep=0.4cm]
-	This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
-	 \end{deptext} 
-	\depedge{2}{1}{det} 
-	\depedge[show label]{4}{2}{subj} 
-	\depedge[show label]{4}{3}{mod} 
-	\deproot[show label, edge height=2cm]{4}{root} 
-	\depedge{4}{5}{mod} 
-	\depedge{4}{6}{comp:aux} 
-	\depedge{8}{7}{det} 
-	\depedge{6}{8}{comp:obj} 
-	\depedge[show label]{10}{9}{cc} 
-	\depedge[show label, edge height=1.5cm]{4}{10}{conj} 
-	\depedge[show label]{10}{11}{udep} 
-	\depedge{11}{12}{comp:obj} 
-	\end{dependency}
-	
-	\input{inputs/conllutable}
-\end{exe}
-\end{adjustwidth}
-\vspace{.5cm}
+Dependency trees as shown in previous chapters, though possibly comprehensible for people, are not written in a way that is easily understandable by computer programs, including parsers. \cite{buchholz-marsi-2006-conll} created the CoNLL-X format, which was first intended for the comparison of parser outputs in a dependency parsing shared task. Today this format is widely used for representing dependency trees in a plain-text form. The UD project adapted the format to their needs by replacing some of the information included in CoNLL-X and thus creating the CoNLL-U format, now also used for SUD data. Appendix \ref{ap:conllu} shows an example of an SUD dependency tree presented as a tree and in the CoNLL-U format.
 
-Corpora in the CoNLL-U format were downloaded from the SUD website. If a corpus is large enough, it is split into three parts: training, development and testing. The training set is used to expose the parser to the correct dependency trees and based on that a prediction model is created. The model is tuned using the development set -- the model tries to predict what is the correct dependency tree for a sentence and the prediction is then confronted with the data in the set. Adjustments are made until there is no gain in the scores acheived by the parser for a certain number of learning steps (in the scripts used here this is 3000 steps). 
+Training was conducted using the scripts made available by the Stanza developers.\footnote{\url{https://github.com/stanfordnlp/stanza-train}} The models were trained on the English SUD corpora, which were created by converting the UD corpora into SUD using a set of graph conversion rules developed by the authors of SUD \citep{gerdes-etal-2018-sud}.\footnote{\url{https://github.com/surfacesyntacticud/tools/blob/v2.12/converter/grs/UD_to_SUD.grs}} If a corpus is large enough, it is split into three parts: training, development and testing. The training set is used to expose the parser to the correct dependency trees and based on that a prediction model is created. The model is tuned using the development set -- the model tries to predict what is the correct dependency tree for a sentence and the prediction is then confronted with the data in the set. Adjustments are made until there is no gain in the scores acheived by the model. 
 
-Training a model requires word vector data (which is provided with the default model for English) and a prepared treebank -- this means that all of the possible annotations from a treebank have to be listed for the prediction model to choose from. After all the needed files were provided, the training script was run. The batch size was set to 5000 and the dropout rate was 0.33. This means that the whole training dataset was split into batches, each with 5000 elements -- the bigger the batch the more precise the gradient function and thus the predictions. Dropout rate is the proportion of nodes in the neural network that are dropped during training. Without any dropout, a model might become overfitted for the training data. This means that it will be very good at predicting annotations for the sentences it has already seen, but not so much with any other data. The dropout rate chosen for training here was recommended in the training documentation.
+Training a model requires word vector data (which is provided with the default model for English) and a prepared treebank -- this means that all of the possible annotations from a treebank have to be listed for the prediction model to choose from. After all the needed files were provided, the training script was run. The batch size was set to 1000 and the dropout rate was 0.33. This means that the whole training dataset was split into batches, each with 1000 elements, which were then given to the model to assign weigths to different possible parses of a sentence. Dropout rate is the proportion of nodes in the neural network that are dropped during training. Without any dropout, a model might become overfitted for the training data. This means that it will be very good at predicting annotations for the sentences it has already seen, but not so much with any other data. The dropout rate chosen for training here was recommended in the training documentation, the batch size was dictated by the hardware limitations.
+% duże uproszczenia powyżej, może powinnam to poprawić
 
-All of the corpora used in this experiment were ready for training, besides one -- the GUMReddit corpus, as it is not fully available online. All of the dependencies and morphological features and so on are included in the CoNLL-U files, but the words themselves and the lemmas are missing. As the textual data is required for training, the appropriate script from the GUM corpus repository was utilised.\footnote{\url{https://github.com/amir-zeldes/gum/blob/master/get_text.py}} 
-
-The following subsections describe the models that were trained as a part of this study.
+The following subsections describe the corpora used to train the models for this study.
 
 \subsection{Combined model}
-%ive got the links to sources in my obsidian notes (dobor procesorow i korpusow)
+The combined model was used to annotate most of the data analysed in this study. It was trained on the combined training sets from the EWT, GUM and ParTUT corpora, all available converted to the SUD annotation scheme.\footnote{\url{https://surfacesyntacticud.github.io/data/}} A corresponding model was also trained for the UD scheme to compare the performance on those two schemes.
 
-The most crucial of the models was the combined one. It was used to annotate most of the data analysed in this study. The corpora used for training were SUD\_English-EWT, SUD\_English-GUM, SUD\_English-ParTUT. 
+EWT is the English Web Treebank. The data was collected between the years 1999 and 2011 and comes from 5 primary sources: weblogs, newsgroups, emails, reviews and question-answers. In total, the corpus contains 254,820 words, which makes it the biggest available SUD corpus for English. The texts originally had constituency annotation, which was then automatically converted into Stanford Dependencies and then manually corrected to UD. 
 
-% https://wstyler.ucsd.edu/enronsent/
-The first of these is based on the English Web Treebank. It has 5 primary sources of data: weblogs, newsgroups, emails, reviews and question-answers. The first two -- weblogs and newsgroups -- were collected in the years 2003--2006. Email messages are from the Enronsent Corpus, which contains emails sent by the employees of Enron Corporation in the years 1999--2002, that were made public domain during the investigation of Enron. The emails in the corpus were processed to have as little non-human input as possible. The reviews of businesses and services included in the corpus were taken from various Google websites in 2011, but no specific dates were provided. The case was similar with question-answer data, which was collected in 2011 from the Yahoo! Answers website. In total, the corpus contains 254,820 words. The original constituency annotation was automatically converted into Stanford Dependencies and then manually corrected to UD. Using the code mentioned earlier in this chapter it was then converted to SUD. The corpus was chosen for training this model, as it is the biggest available annotated corpus for English. 
+The second corpus used for this model was GUM -- the Georgetown University Multilayer corpus. The early versions of GUM were annotated according to the Stanford Dependencies scheme, later they were manually converted into UD and the subsequent additions to the corpus have been annotated natively using UD. The corpus contains 228,399 tokens and is made up of a variety of styles, for instance academic, interviews, travel guides, letters, how-to guides and forum discussions.\footnote{The GUMReddit corpus, which contains the forum discussions, was here included in the whole GUM corpus. Before training any models it is required to run a script that recovers the textual data that is by default not included. The script is available in the GUM corpus repository: \url{https://github.com/amir-zeldes/gum/blob/master/get_text.py}.}
 
-The second corpus used for this model was SUD\_English-GUM, which is a SUD-converted version of the Georgetown University Multilayer corpus. While the early versions of GUM were annotated in Stanford Dependencies scheme, they were later manually converted into UD and the later versions have been created natively in UD. The corpus comprises a variety of styles, for instance academic, interviews, travel guides, letters, how-to guides and forum discussions. The last of these requires special attention, since it is sometimes considered seperately from the rest of the GUM corpus. The source for this data are Reddit forum discussions, which means that the text within this part of the corpus is protected by the Reddit terms and conditions and thus not freely available. In this data, words are substituted by underscores in the form and lemma fields in CoNLL-U files. Using it for training requires first running a script that completed the corpus, as was mentioned eariler. Including the Reddit data, there are 228,399 tokens in the corpus, which makes it the second largest corpus among the ones available for English and an obvious choice for training a parser. 
+The third corpus used for training the combined model was one based on the English part of ParTUT, the multilingual parallel treebank from the University of Turin. It consists of legal texts, Wikipedia articles and transcriptions of TED Talks. It was originally manually annotated in a style specific to the treebanks developed at the University of Turin, then converted to UD. The corpus has 49,602 tokens, which is a lot less compared to the corpora described earlier, but is still a significant contribution to the model. 
 
-%(about ParTUT -- how big it is, what data is it built on, how was is annotated natively, why did i choose it)
-The third corpus used for training the combined model was one based on the English part of ParTUT, the multilingual parallel treebank from the University of Turin. It consists of legal texts, Wikipedia articles and transcriptions of TED Talks. It was originally annotated in a style specific to the treebanks developed at the University of Turin, then converted to UD and from that to SUD. The corpus has 49,602 tokens, which is a lot less compared to the corpora described earlier, but is still a significant contribution to the model, especially considering the style difference between this corpus and the other ones. 
+Corpora listed above were chosen because of their size and the consistency of annotation. Some corpora, despite the style diversity they could provide for the parsing model, had to be excluded from training, because some information was missing or annotated inconsistently with the other corpora used here. 
 
-One additional reason for choosing the corpora listed above is consistency of annotation. Some corpora, despite the style diversity they could provide for the parsing model, had to be excluded from training, because some information was missing or inconsistent with the other corpora used here. 
-
-For English, the Stanza parser by default also uses a model trained on multiple corpora: EWT, GUM, PUD and Pronouns. The two last ones were not used to train the model here, as they were too small to have been split into the training, development and testing sets. 
+%For English, the Stanza parser by default also uses a model trained on multiple corpora: EWT, GUM, PUD and Pronouns. The last two were not used to train the model here, as they were too small to have been split into the training, development and testing sets. 
+% no i co z tym, nie poprawiłam tego
+% może udam że tego nie ma hihi
 
 \subsection{Spoken model}
-Spoken and written language differ significantly, which can lead to poor automatic parsing performance. To avoid that, this experiment involves training a model specialising in spoken data. The corpora used to this end were SUD\_English-Atis and parts of the SUD\_English-GUM corpus. 
+Spoken and written language differ significantly, therefore a model trained mainly on one type of data can perform poorly when presented with the other type. Most of the corpus data is from written text, as it is easier to obtain. This experiment involves training a model specialising in spoken data to avoid the poor quality resulting from an ill-fitted model. The corpora used for this model were parts of the GUM corpus, specifically those with interviews, conversations and vlogs (51,451 tokens) and the Atis corpus. Atis comprises sentences from the Airline Travel Informations dataset, which come from transcriptions of people asking automated inquiry systems for flight information. The corpus has 61,879 tokens and was natively annotated in UD. 
 
-Parts of the GUM corpus utilised here were those with interviews, conversations and vlogs. The relevant sentences were extracted from the original CoNLL-U files by looking for documents labelled \texttt{id = GUM\_interview}, \texttt{id = GUM\_vlog} or \texttt{id = GUM\_conversation}. 
+\begin{table}[hbt!]
+\begin{adjustwidth}{-20pt}{20pt}
+	\begin{tabular}{r || p{2.5cm} | p{5cm} | p{3.5cm}}
+		name & no. of tokens & source texts & annotation style\\
+		\hline\hline
+		\rowcolor{lightgray} \multicolumn{4}{c}{combined model}\\
+		\hline\hline
+		EWT & 251 492 & weblogs, newsgroups, emails, reviews and question-answers & constituency, then converted to Stanford Dependencies, then to UD\\\hline
+		GUM & 228 399 & academic, Wikipedia articles, vlogs, conversations, courtroom transcripts, essays, fiction, forum, how-to guides, interviews, letters, news stories, podcasts, political speeches, textbooks, travel guides & Stanford Dependencies, then converted to UD\\\hline
+		ParTUT & 49 602 & legal texts, Wikipedia articles, public talk transcripts & own annotation style, then converted to UD\\\hline
+		total & \multicolumn{3}{l}{529 493}\\
+		\hline\hline
+		\rowcolor{lightgray} \multicolumn{4}{c}{spoken model}\\
+		\hline\hline
+		Atis & 61 879 & transcriptions of questions about flight information & natively UD\\\hline
+		GUM (parts) & 51 451 & interviews, conversations, vlogs & Stanford Dependencies, then converted to UD\\\hline
+		total & \multicolumn{3}{l}{113 330}
+	\end{tabular}
+\end{adjustwidth}
+\caption{Summary of the information about corpora used to train models}
+\end{table}
 
-%(about Atis -- how big it is, what data is it built on, how was is annotated natively, why did i choose it)
-As for the other corpus, Atis comprises sentences from the Airline Travel Informations dataset. Those are transcriptions of people asking automated inquiry systems for flight information. The corpus has 61,879 tokens and was natively annotated in UD. 
-
-\subsection{Comparison models}
-The main purpose of the combined model is to create annotation for analysis, though one of the intentions of this study was also to compare the learnability of the two dependency annotation schemes: the "semantic" UD and the "syntactic" SUD. However a direct comparison between the two combined models is not be possible for a lack of information about the UD combined model. The datasets included in the training are described in the Stanza documentation,\footnote{\url{https://stanfordnlp.github.io/stanza/combined_models.html}} however there is no information on how the datasets were split into training and testing sets. The splits are known for big corpora, such as GUM and EWT, but the PUD and Pronouns are too small to be split into smaller sets. Another issue is that the evaluation for the UD combined model was not made available and running an evaluation script on this model is not possible without the training, development and testing splits. 
-
-Considering this, the learnability of the annotation schemes described here is compared based on the models that are trained on one corpus each. All of those models have been trained on corpora big enough to have official splits into training, development and testing sets. Evaluation of those models trained on UD is reported in the Stanza documentation and was conducted on the testing sets. The comparison SUD models were trained using the official splits for every corpus. Results of the evaluation of this training along with the evaluation results for the corresponding UD models are shown in Section (there will be a ref here).
+\newpage
 
 \section{Data extraction}
 %OMÓW TO NA PRZYKŁADZIE
 %MOŻE DAJ WIĘCEJ CODE SNIPPETS?
+% woah co to za zlota mysl powyzej, przestan z tymi code snippets
 
-The input data from the COCA corpus was in the form of text files. Those were split into sentences using another parser, Trankit \citep{nguyen2021trankit}, as the sentence segmentation outputs from Trankit and Stanza suggested that this would provide better quality data for further analysis. Split texts were then put into .tsv files, so that along with the sentence text, also the information about text identifier and the index of the sentence in a document could be included. Those sentences were then put into batches, but separated with \texttt{\textbackslash n\textbackslash n}. This way the parsing process was faster than it would be when parsing sentence by sentence, but the sentences were clearly already split. The next step was parsing the texts, which was done using a parsing pipeline. Creating a parsing pipeline requires specifying the input language and the processors that make up the pipeline -- in this case those were the tokeniser, part-of-speech-tagger, lemmatiser and dependency parser. Here the tokeniser and lemmatiser were those of the default English model, as those two processes are the same in UD and SUD. The other two processors, POS-tagger and dependency parser were trained on SUD and used in the pipeline. Additionally, it was specified that the text was already split into sentences by setting the \texttt{tokenize\_no\_split} parameter to \texttt{True}. The pipeline configuration is shown in (\ref{ex:pipeline}).
+The scripts used for parsing and extracting data are available in a github repository.\footnote{\url{https://github.com/bmagdab/sud-coords}} The extraction process will be illustrated by the sentence \textsl{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution}.\footnote{Modified version of the sentence \texttt{GUM\_bio\_bernoulli-9} from the GUM corpus \citep{Zeldes2017}} 
 
+Texts from the COCA corpus are first split into sentences using the Trankit parser \citep{nguyen2021trankit}, which deals with the task more accurately than Stanza. Those sentences are then put into the Stanza's parsing pipeline: first the sentences are tokenised, then lemmas of all of the words in the sentence are found, parts of speech and morphological features are assigned and finally the dependency trees for all of the sentences are created. After running through the pipeline, the example sentence has a dependency tree shown in (\ref{ex:bernoulli}). 
+
+\begin{adjustwidth}{-90pt}{70pt}
+\small
 \begin{exe}
-\ex\label{ex:pipeline}
-\ttfamily\raggedright\small
-config = \{\\\hspace{.5cm}
-        'processors': 'tokenize,pos,lemma,depparse',\\\hspace{.5cm}
-        'lang': 'en',\\\hspace{.5cm}
-        'use\_gpu': True,\\\hspace{.5cm}
-        'pos\_model\_path': './saved\_models/en\_combined-sud\_charlm\_tagger.pt',\\\hspace{.5cm}
-        'depparse\_model\_path': './saved\_models/en\_combined-sud\_charlm\_parser.pt',\\\hspace{.5cm}
-        'tokenize\_pretokenized': False,\\\hspace{.5cm}
-        'tokenize\_no\_ssplit': True,\\\hspace{.5cm}
-        'download\_method': stanza.DownloadMethod.REUSE\_RESOURCES\\\hspace{.5cm}
-\}\\
-nlp = stanza.Pipeline(**config)
-\end{exe}
-
-The process of extracting coordinations will be illustrated by the sentence shown in (\ref{ex:extract-sent1}) with a SUD tree.\footnote{Sentence \texttt{reviews-357217-0002} from the EWT corpus \citep{silveira14gold}.}
-% not sure about this citation, should it be sth else?
-
-\begin{exe}
-\ex
-\label{ex:extract-sent1}
-\begin{dependency}
+\ex\label{ex:bernoulli}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
 	\begin{deptext}
-		 Incompetent\& servers\& ,\& kitchen\& and\& management\& .\\
+		 The\& Bernoulli\& family\& came\& originally\& from\& Antwerp\& ,\& but\& emigrated\& to\& escape\& the\& Spanish\& persecution\& .\\
 	 \end{deptext} 
-	\depedge{2}{1}{mod} 
-	\deproot{2}{root} 
-	\depedge{4}{3}{punct} 
-	\depedge{2}{4}{conj} 
-	\depedge{6}{5}{cc} 
-	\depedge{4}{6}{conj} 
-	\depedge[edge height=2cm]{2}{7}{punct} 
+	\depedge{3}{1}{det} 
+	\depedge{3}{2}{compound} 
+	\depedge{4}{3}{subj} 
+	\deproot{4}{root} 
+	\depedge{4}{5}{mod} 
+	\depedge{4}{6}{udep} 
+	\depedge{6}{7}{comp:obj} 
+	\depedge{10}{8}{punct} 
+	\depedge{10}{9}{cc} 
+	\depedge[edge height=9ex]{4}{10}{conj} 
+	\depedge{10}{11}{mod} 
+	\depedge{11}{12}{comp:obj} 
+	\depedge{15}{13}{det} 
+	\depedge{15}{14}{mod} 
+	\depedge{12}{15}{comp:obj} 
+	\depedge[edge height=12ex]{4}{16}{punct} 
 \end{dependency}
 \end{exe}
+\end{adjustwidth}
 
-The text is then given to the \texttt{nlp} pipeline and parsed. In the output there is a list of Sentence objects, which have a list of dependencies as one of their attributes. 
+Every dependency tree is then searched for coordinations, which are marked by the dependency label \texttt{conj}. In (\ref{ex:bernoulli}) there is one \texttt{conj} dependency that connects the words \textsl{came} and \textsl{emigrated}. If such a dependency is found, the algorithm looks for every conjunct within that coordination and checks whether there are any other coordinations embedded inside of the one already found -- if there are any, they are separated and analysed later. After all coordinations in a document are found, the algorithm searches for all information necessary for later analysis: the conjunction, heads of conjuncts, the exact text and length of the left and right conjunct, the governor position and additional information about parts of speech and morphological features of all of the elements of the coordination. In the example (\ref{ex:bernoulli}) the heads of the left and right conjuncts are the words \textsl{came} and \textsl{emigrated} respectively. The word \textsl{do} has no head in this sentence, therefore there is no governor of the coordination. If the head of the right conjunct has a \texttt{cc} dependency, that dependency is the conjunction of the coordination -- in (\ref{ex:bernoulli}) this is the word \textsl{but}. 
 
-Coordinations are found by looking for \texttt{conj} dependencies within a sentence. The SUD approach assumes the chain representation of a coordination, therefore once there a \texttt{conj} dependency is found, the script looks for more links in the chain. In the sentence (\ref{ex:extract-sent1}) first the \texttt{conj} dependency will be found between the words \textsl{servers} and \textsl{kitchen}. Indices of those two words are saved in a list and the script looks through the dependencies attached to the word \textsl{kitchen}: there is \texttt{punct} and \texttt{conj}. The \texttt{conj} one is attached to the word \textsl{management}, therefore the same is then done for that word: its index is saved to the list and the script checks whether it has a \texttt{conj} dependency. Since it does not have such a dependency, the whole coordination has been found -- it has three conjuncts: \textsl{servers}, \textsl{kitchen} and \textsl{management}. 
+Then the algorithm looks for the text of the right conjunct -- it does not add to the conjunct the dependency labelled \texttt{cc}, because this is a seperate element of the coordination. It does not add the \texttt{punct} dependency either, if it appears at the beginning of the conjunct, because a conjunct has to start with a word. The only other dependency that the word \textsl{emigrated} has is \texttt{mod}. Since it appears after the head of the right conjunct, it can be either private to the conjunct or shared by the whole coordination. The heuristic applied here after \cite{pbg2023} is that if any of the other conjuncts have a dependency like this, this dependency is private. Otherwise it is shared by the whole coordination. In this case the only other conjunct is headed by the word \textsl{came} and it does have a \texttt{mod} dependency, therefore each head has a private \texttt{mod} dependency that is included in the appropriate conjunct. After all direct dependencies of the head are covered, the whole branches starting with those direct dependencies are added to the conjunct. This means that since the word \textsl{to} from the \texttt{mod} dependency has been added to the conjunct, this words dependencies are also added -- here this is the word \textsl{escape}. This continues until there are no more nodes in the branch of the tree to add. The text of the right conjunct is found this way and it is \textsl{emigrated to escape the Spanish persecution}. The process is then repeated for the left conjunct. In (\ref{ex:bernoulli}) the word \textsl{came} has three dependencies: \texttt{subj}, \texttt{mod} and \texttt{udep}. The rule here is mirroring the one from the right conjunct -- dependencies appearing on the left side of the left conjunct are private to the conjunct if any of the other conjuncts have the same dependency, otherwise they are shared by the whole coordination. The \texttt{mod} and \texttt{udep} dependencies appear after the head of the conjunct and are therefore automatically added to the conjunct. The \texttt{subj} dependency has to be checked -- this time the algorithm finds that no other conjunct has the same dependency, therefore this dependency has to be shared by the whole coordination and is not included in the left conjunct. The text of the left conjunct is found to be \textsl{came originally from Antwerp}. 
 
-Once all lists of indices representing coordinations in a given sentence are ready, for each one of them a dictionary is created. An example of such a dictionary will be presented for the coordination in the sentence in (\ref{ex:extract-sent2})\footnote{Sentence \texttt{answers-20111024111513AAAQhAO\_ans-0006} from the EWT corpus \citep{silveira14gold}.}.
+The last step is measuring the lengths of both conjuncts in characters, syllables and words. All of the information found during this process is put in a table similar to the one in (\ref{tab:csv}).
 
-\begin{exe}
-\ex\label{ex:extract-sent2}
-\begin{dependency}
-	\begin{deptext}
-		 Do\& yourself\& a\& favor\& and\& give\& them\& a\& call\& .\\
-	 \end{deptext} 
-	\deproot{1}{root} 
-	\depedge{1}{2}{comp:obl} 
-	\depedge{4}{3}{det} 
-	\depedge{1}{4}{comp:obj} 
-	\depedge{6}{5}{cc} 
-	\depedge[edge height=2cm]{1}{6}{conj} 
-	\depedge{6}{7}{comp:obl} 
-	\depedge{9}{8}{det} 
-	\depedge{6}{9}{comp:obj} 
-	\depedge[edge height=3cm]{1}{10}{punct} 
-\end{dependency}
-\end{exe}
-
-The first and last indices are popped from the list and added to the dictionary as the left and right conjunct heads respectively with the keys \texttt{'L'} and \texttt{'R'}. The rest of the conjuncts are added with the key \texttt{'other\_conjuncts'} -- for the coordination in sentence (\ref{ex:extract-sent2}) that list is empty, as there are only two conjuncts. This coordination does not have a governor, therefore the key \texttt{'gov'} is not added to the dictionary. The next step is looking for the conjunction of the coordination. If there is one, it is always attached to the right conjunct and it is labelled \texttt{cc}. Once it is found, the whole word is added to the dictionary with the \texttt{'conj'} key. 
-
-Finally, the information about the conjunct lengths has to be extracted. All of the dependencies appearing between the left and right conjunct heads are considered private to the conjuncts they are attached to. This means that in sentence (\ref{ex:extract-sent2}) the case of the left conjunct is simple -- both of the dependencies of the word \textsl{Do} (\texttt{comp:obj} and \texttt{comp:obl}) are directed to the right and are therefore part of the left conjunct. As for the head of the right conjunct, the word \textsl{give}, its dependencies could be shared by the whole coordination. A heuristic applied here is that if any of the other conjuncts have a dependency with the same label as some external dependency of the leftmost or rightmost conjunct, that external dependency is private to this conjunct. Here, the word \textsl{give} has a dependency \texttt{comp:obj} directed to the right. The head of the other conjunct, \textsl{Do}, also has a dependency with this label, therefore this dependency is private to and part of the right conjunct. If the word \textsl{Do} did not have such a dependency, the word \textsl{call} would have to be excluded from the right conjunct and shared by the whole coordination. 
-
-With conjunct texts found, they can be measured. This is done in characters by taking the length of the conjunct text, in words and tokens by counting how many of those parser found in the conjunct and in syllables using the \texttt{cmudict} from the \texttt{nltk} package. In (\ref{ex:coord-dict}) there are contents of the dictionary corresponding to the coordination found in sentence (\ref{ex:extract-sent2}).
-
-\begin{exe}
-\ex\label{ex:coord-dict}
-\ttfamily\raggedright\scriptsize
-\begin{multicols}{2}
-'L': \{"id": 1,\\\hspace{.5cm}
-  "text": "Do",\\\hspace{.5cm}
-  "lemma": "do",\\\hspace{.5cm}
-  "upos": "VERB",\\\hspace{.5cm}
-  "xpos": "VB",\\\hspace{.5cm}
-  "feats": "Mood=Imp|VerbForm=Fin",\\\hspace{.5cm}
-  "head": 0,\\\hspace{.5cm}
-  "deprel": "root"\}
-
-'Lconj': 'Do yourself a favor'
-
-'Lwords': 4
-
-'Ltokens': 4
-
-'Lsyl': 6
-
-'R': \{"id": 6,\\\hspace{.5cm}
-  "text": "give",\\\hspace{.5cm}
-  "lemma": "give",\\\hspace{.5cm}
-  "upos": "VERB",\\\hspace{.5cm}
-  "xpos": "VB",\\\hspace{.5cm}
-  "feats": "Mood=Imp|VerbForm=Fin",\\\hspace{.5cm}
-  "head": 1,\\\hspace{.5cm}
-  "deprel": "conj"\}
-
-'Rconj': 'give them a call'
-
-'Rwords': 4
-
-'Rtokens': 4
-
-'Rsyl': 4
-\end{multicols}
-\begin{multicols}{2}
-'conj': \{"id": 5,\\\hspace{.5cm}
-  "text": "and",\\\hspace{.5cm}
-  "lemma": "and",\\\hspace{.5cm}
-  "upos": "CCONJ",\\\hspace{.5cm}
-  "xpos": "CC",\\\hspace{.5cm}
-  "head": 6,\\\hspace{.5cm}
-  "deprel": "cc"\}
-
-'other\_conjuncts': []
-
-'conj\_lengths': [(4, 19), (4, 16)]
-
-'sentence': 'Do yourself a favor and give them a call.'
-
-'sent\_id': 'answers-20111024111513AAAQhAO\_ans-0006'
-\end{multicols}
-\end{exe}
-
-A list of dictionaries like the one in (\ref{ex:coord-dict}) is created for every processed corpus file. Then every dictionary becomes an observation in an output .csv table. 
-
+\begin{table}
+	\small\hspace{-80pt}
+\begin{tabular}{| r | r | r | r | r |}
+	\hline
+	&governor.position & governor.word & conjunction.word & no.conjuncts\\\hline
+	&0 & & but & 2\\\hline\hline
+	L.conjunct & L.dep.label & L.words & L.syllables & L.chars\\\hline
+	came originally from Antwerp & root & 4 & 9 & 28\\\hline\hline
+	R.conjunct & R.dep.label & R.words & R.syllables & R.chars\\\hline
+	emigrated to escape the Spanish persecution & conj & 6 & 14 & 43\\\hline\hline
+	\multicolumn{5}{|r|}{sentence}\\\hline
+	\multicolumn{5}{|r|}{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution.}\\\hline
+\end{tabular}
+\caption{An example of a table with the extracted information about coordinations. Some columns are excluded for simplicity.}
+\label{tab:csv}
+\end{table}

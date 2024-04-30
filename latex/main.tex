@@ -8,6 +8,7 @@
 % \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usepackage{tikz-dependency}
+\usepackage[table]{xcolor}
 % \usetikzlibrary{calc}
 % \usepackage[normalem]{ulem}
 % \usepackage{amsmath}
@@ -60,34 +61,38 @@
 
 \begin{document}
 
-    \input{titlepage}
-    \pagestyle{empty}
-    \section*{Summary}
-    %\input{abstracts/abstract_EN.tex}
-    \section*{Key words}
-    %\input{abstracts/title&kws_EN.tex}
-    \newpage
-    \pagestyle{empty}
-    \section*{Streszczenie}
-    %\input{abstracts/abstract_PL.tex}
-    \section*{Słowa kluczowe}
-    %\input{abstracts/title&kws_PL.tex}
-    
-    % ToC %
-    
-    \tableofcontents
-    
-    % Chapters
-    
-    \pagestyle{fancy}
-    \chapter{Introduction} \label{ch:introduction}
-   \input{introduction}
-    \chapter{Theoretical background}
+\input{titlepage}
+
+\pagestyle{empty}
+\section*{Summary}
+%\input{abstracts/abstract_EN.tex}
+\section*{Key words}
+%\input{abstracts/title&kws_EN.tex}
+
+\newpage
+\pagestyle{empty}
+\section*{Streszczenie}
+%\input{abstracts/abstract_PL.tex}
+\section*{Słowa kluczowe}
+%\input{abstracts/title&kws_PL.tex}
+
+% ToC %
+\tableofcontents
+
+% Chapters
+\pagestyle{fancy}
+\chapter{Introduction}\label{ch:introduction}
+    % \input{introduction}
+\chapter{Theoretical background}
     \input{theory}
-    \chapter{Data processing}
-   \input{technical}
-    \chapter{Statistical analysis}
-   \input{statistics}
+\chapter{Data processing}
+    \input{technical}
+\chapter{Statistical analysis}
+    \input{statistics}
+
+\appendix
+\chapter{Example of a CoNLL-U representation}\label{ap:conllu}
+    \input{inputs/ex-conll.tex}
 
 \bibliography{bibliography}
 

@@ -4,7 +4,7 @@ The bouquet structure comes from the Stanford parser \citep{de-marneffe-etal-200
 \begin{exe}
 \centering
 \ex\label{ex:stanford}
-\begin{dependency}[theme = simple]
+\begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
         $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
             \end{deptext}
@@ -24,6 +24,7 @@ In this approach there is a dependency connecting the governor of the coordinati
 
 \begin{exe}
 \ex\label{ex:stanford-all}
+\raisebox{-0.5ex}{
 \begin{minipage}[t]{2.5\treewidth}
 \begin{xlist}
 
@@ -140,6 +141,7 @@ In this approach there is a dependency connecting the governor of the coordinati
 
 \end{xlist}
 \end{minipage}
+}
 \end{exe}
 
 \vspace{0.5\treeheight}
