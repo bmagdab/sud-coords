@@ -1,13 +1,17 @@
+import os
+import argparse
 import pandas
 import stanza
+
+import ud_vs_sud.conll18_ud_eval
 from ud_vs_sud.mcnemar import evaluate_wrapper
 from ud_vs_sud.combo_trainer import eval_on_file
 from stanza.utils.conll import CoNLL
 
-ud_test_file = 'en_compare-ud-test.conllu'
-sud_test_file = 'en_combined-ud-test.conllu'
-ud_model_file = 'en_compare-ud_charlm_parser.pt'
-sud_model_file = 'en_combined-sud_charlm_parser.pt'
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-c', action='store_true')
+args = parser.parse_args()
 
 
 def final_eval(score_dicts):
@@ -57,7 +61,7 @@ def final_eval(score_dicts):
 
 
 def get_sents(test_filename):
-    with open(test_filename, mode='r', encoding='utf-8') as test:
+    with open('eval/' + test_filename, mode='r', encoding='utf-8') as test:
         lines = test.readlines()
         out_sents = []
         for line in lines:
@@ -66,14 +70,28 @@ def get_sents(test_filename):
                 out_sents.append(sentence + '\n')
 
     out_file = test_filename.replace('.conllu', '-sents.txt')
-    with open(out_file, mode='w', encoding='utf-8') as out_test:
+    with open('eval/' + out_file, mode='w', encoding='utf-8') as out_test:
         out_test.writelines(out_sents)
     return out_file
 
 
-def generate_on_file(test_file, scheme):
-    sents_file = get_sents('eval/' + test_file)
-    with open(sents_file, mode='r', encoding='utf-8') as file:
+def get_conjs(test_filename):
+    with open('eval/' + test_filename, mode='r', encoding='utf-8') as test:
+        text = test.read()
+        sents = text.split('\n\n')
+        out_sents = ''
+        for sent in sents:
+            if '\tconj\t' in sent:
+                out_sents += sent + '\n\n'
+
+    out_file = test_filename.replace('.conllu', '-conj.conllu')
+    with open('eval/' + out_file, mode='w', encoding='utf-8') as out_test:
+        out_test.writelines(out_sents)
+    return out_file
+
+
+def generate_on_file(sents_file, scheme):
+    with open('eval/' + sents_file, mode='r', encoding='utf-8') as file:
         sents = file.read()
     if scheme == 'sud':
         config = {
@@ -110,10 +128,20 @@ def generate_on_file(test_file, scheme):
     return predicted
 
 
-# sud_predicted = generate_on_file(sud_test_file, 'sud')
-# ud_predicted = generate_on_file(ud_test_file, 'ud')
-sud_predicted = 'sud_test_predicted.conllu'
-ud_predicted = 'ud_test_predicted.conllu'
+ud_model_file = 'en_compare-ud_charlm_parser.pt'
+sud_model_file = 'en_combined-sud_charlm_parser.pt'
+sud_test_file = 'en_combined-ud-test.conllu'
+ud_test_file = 'en_compare-ud-test.conllu'
+if args.c:
+    sud_test_file = get_conjs(sud_test_file)
+    ud_test_file = get_conjs(ud_test_file)
+
+sud = get_sents(sud_test_file)
+ud = get_sents(ud_test_file)
+
+sud_predicted = generate_on_file(sud, 'sud')
+ud_predicted = generate_on_file(ud, 'ud')
+
 sud_scores = eval_on_file('eval/' + sud_predicted, 'eval/' + sud_test_file)
 ud_scores = eval_on_file('eval/' + ud_predicted, 'eval/' + ud_test_file)
 score_dicts = [{'base_name': 'test-sud', 'test': sud_scores}, {'base_name': 'test-ud', 'test': ud_scores}]
