@@ -1,19 +1,22 @@
 # conversation, vlog, interview
 import re
 
-with open('en_gum-ud-test.conllu', mode='r') as file:
+ud = True
+
+with open('en_gum-ud-dev.conllu', mode='r') as file:
     source = file.read()
-    heading = re.match('# global\.columns.*\\n', source)
-    if heading:
+    if not ud:
+        heading = re.match('# global\.columns.*\\n', source)
         source = source.removeprefix(heading.group())
         spok = heading.group()
+        docs = source.split(sep='#  = # newdoc')
     else:
         spok = ''
-    docs = source.split(sep='#  = # newdoc')
+        docs = source.split(sep='# newdoc')
     for doc in docs:
         genre = re.match(' id = GUM_interview| id = GUM_vlog| id = GUM_conversation', doc)
         if genre:
             spok += '#' + doc
 
-with open('gum_spok_test.conllu', mode='w') as file:
+with open('gum_spok_dev.conllu', mode='w') as file:
     file.write(spok)
