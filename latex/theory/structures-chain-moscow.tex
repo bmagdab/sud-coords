@@ -1,5 +1,5 @@
 \subsection{Chain/Moscow}
-Another asymmetrical approach is the chain, or Moscow one. It is utilised in the Meaning-Text Theory proposed by \cite{melcuk-1988}. 
+Another asymmetrical approach is the chain, or Moscow one, shown in (\ref{ex:moscow}). It is utilised in the Meaning-Text Theory \citep{melcuk-1988}. 
 
 \begin{exe}
 \centering
@@ -18,7 +18,7 @@ Another asymmetrical approach is the chain, or Moscow one. It is utilised in the
         \end{dependency}
 \end{exe}
 
-The structure is created by connecting the governor to the first conjunct of the coordination, then every element of the coordination (including the conjunction) to the next one. As the dependency between the governor and the coordination is specifically between the governor and the first conjunct, the chain approach is another example of an asymmetrical annotation style. 
+The structure is created by connecting the governor to the first conjunct of the coordination, then every element of the coordination (including the conjunction) to the next one. As the dependency between the governor and the coordination is always between the governor and the first conjunct, the chain approach is another example of an asymmetrical annotation style. 
 
 \vspace{-0.5\treeheight}
 \begin{exe}
@@ -145,25 +145,26 @@ The structure is created by connecting the governor to the first conjunct of the
 
 \vspace{0.5\treeheight}
 
-The diagrams in (\ref{ex:moscow-all}) show that, in this case, similarly to the bouquet approach, the placement of the shorter conjunct on the left should be preferred, assuming the DLM principle. The placement of the governor again does not seem to have an effect on the ordering. 
+The diagrams in (\ref{ex:moscow-all}) show that, in this case, similarly to the Stanford approach, the placement of the shorter conjunct on the left should always be preferred, assuming the DLM principle. The placement of the governor, again, does not have an effect on the ordering.
 
-A variation of this annotation style is now used in the Surface-syntactic Universal Dependencies scheme (described in Section \ref{sec:sud}), which is based on the Universal Dependencies. The authors chose the Chain style instead of the Bouquet style, as it minimizes the dependency lengths, which the authors wanted to be reflected in the syntactic structure. The difference between their style and the one shown in (\ref{ex:moscow}) is that the conjunction is not attached to the preceding conjunct, but to the following one. This annotation is illustrated in (\ref{ex:chain sud}). 
+%to chyba nie jest potrzebne
+% A variation of this annotation style is now used in the Surface-syntactic Universal Dependencies scheme (described in Section \ref{sec:sud}), which is based on the Universal Dependencies. The authors chose the Moscow style instead of the Stanford style, as it minimizes the dependency lengths, which the authors wanted to be reflected in the syntactic structure. The difference between their style and the one shown in (\ref{ex:moscow}) is that the conjunction is not attached to the preceding conjunct, but to the following one. This annotation is illustrated in (\ref{ex:chain sud}). 
 
-\begin{exe}
-    \ex
-    \label{ex:chain sud}
-    \begin{Center}
-    \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
-            \begin{deptext}
-    $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
-            \end{deptext}
-            \depedge{1}{2}{}
-            \depedge{2}{6}{}
-            \depedge{6}{10}{}
-            \depedge{10}{9}{}
-            \wordgroup{1}{2}{4}{c1}
-            \wordgroup{1}{6}{8}{c2}
-            \wordgroup{1}{10}{12}{c3}
-        \end{dependency}
-\end{Center}
-\end{exe}
+% \begin{exe}
+%     \ex
+%     \label{ex:chain sud}
+%     \begin{Center}
+%     \begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
+%             \begin{deptext}
+%     $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
+%             \end{deptext}
+%             \depedge{1}{2}{}
+%             \depedge{2}{6}{}
+%             \depedge{6}{10}{}
+%             \depedge{10}{9}{}
+%             \wordgroup{1}{2}{4}{c1}
+%             \wordgroup{1}{6}{8}{c2}
+%             \wordgroup{1}{10}{12}{c3}
+%         \end{dependency}
+% \end{Center}
+% \end{exe}
