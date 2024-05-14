@@ -61,7 +61,7 @@ Spoken and written language differ significantly, therefore a model trained main
 %MOŻE DAJ WIĘCEJ CODE SNIPPETS?
 % woah co to za zlota mysl powyzej, przestan z tymi code snippets
 
-The scripts used for parsing and extracting data are available in a github repository.\footnote{\url{https://github.com/bmagdab/sud-coords}} The extraction process will be illustrated by the sentence \textsl{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution}.\footnote{Modified version of the sentence \texttt{GUM\_bio\_bernoulli-9} from the GUM corpus \citep{Zeldes2017}} 
+The scripts used for parsing and extracting data are available in a github repository.\footnote{Scripts used here (available at \url{https://github.com/bmagdab/sud-coords}) were based on those used by \cite{pbg2023} (available at \url{https://github.com/bmagdab/LGPB23-24}).} The extraction process will be illustrated by the sentence \textsl{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution}.\footnote{Modified version of the sentence \texttt{GUM\_bio\_bernoulli-9} from the GUM corpus \citep{Zeldes2017}} 
 
 Texts from the COCA corpus are first split into sentences using the Trankit parser \citep{nguyen2021trankit}, which deals with the task more accurately than Stanza. Those sentences are then put into the Stanza's parsing pipeline: first the sentences are tokenised, then lemmas of all of the words in the sentence are found, parts of speech and morphological features are assigned and finally the dependency trees for all of the sentences are created. After running through the pipeline, the example sentence has a dependency tree shown in (\ref{ex:bernoulli}). 
 
@@ -99,19 +99,28 @@ Then the algorithm looks for the text of the right conjunct -- it does not add t
 
 The last step is measuring the lengths of both conjuncts in characters, syllables and words. All of the information found during this process is put in a table similar to the one in (\ref{tab:csv}).
 
+\newlength{\colwid}
+\setlength{\colwid}{.23\textwidth}
+
+{\def\arraystretch{1.2}
 \begin{table}
-	\small\hspace{-80pt}
-\begin{tabular}{| r | r | r | r | r |}
+	\small\sffamily\centering
+\begin{tabular}{| p{\colwid} | p{\colwid} | p{\colwid} | p{\colwid} |}
 	\hline
-	&governor.position & governor.word & conjunction.word & no.conjuncts\\\hline
-	&0 & & but & 2\\\hline\hline
-	L.conjunct & L.dep.label & L.words & L.syllables & L.chars\\\hline
-	came originally from Antwerp & root & 4 & 9 & 28\\\hline\hline
-	R.conjunct & R.dep.label & R.words & R.syllables & R.chars\\\hline
-	emigrated to escape the Spanish persecution & conj & 6 & 14 & 43\\\hline\hline
-	\multicolumn{5}{|r|}{sentence}\\\hline
-	\multicolumn{5}{|r|}{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution.}\\\hline
+	governor.position & governor.word & conjunction.word & no.conjuncts\\\hline
+	0 & & but & 2\\\hline\hline
+	\multicolumn{4}{| p{4\colwid} |}{L.conjunct}\\\hline
+	\multicolumn{4}{| p{4\colwid} |}{came originally from Antwerp}\\\hline\hline
+	L.dep.label & L.words & L.syllables & L.chars\\\hline
+	root & 4 & 9 & 28\\\hline\hline
+	\multicolumn{4}{| p{4\colwid} |}{R.conjunct}\\\hline
+	\multicolumn{4}{| p{4\colwid} |}{emigrated to escape the Spanish persecution}\\\hline\hline
+	R.dep.label & R.words & R.syllables & R.chars\\\hline
+	conj & 6 & 14 & 43\\\hline\hline
+	\multicolumn{4}{| p{4\colwid} |}{sentence}\\\hline
+	\multicolumn{4}{| p{4\colwid} |}{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution.}\\\hline
 \end{tabular}
 \caption{An example of a table with the extracted information about coordinations. Some columns are excluded for simplicity.}
 \label{tab:csv}
 \end{table}
+}

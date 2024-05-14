@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 % \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
+\usepackage{polski}
 \usepackage{fancyref}
 % \usepackage{expex}
 % \usepackage{hyphenat}
@@ -35,6 +36,8 @@
 \usepackage{changepage} % change margins for a part of a page
 \usepackage{float} % allows me to put figures in minipages
 \usepackage{caption}
+\usepackage{datetime}
+\usepackage{setspace}
 %\usepackage[name = Example, 
 %	labelsep = period, 
 %	justification = centering,
@@ -43,6 +46,13 @@
 
 \hypersetup{hidelinks}
 \urlstyle{same}
+
+\newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
+
+% \definecolor{myred}{HTML}{F8766D}
+% \definecolor{mygreen}{HTML}{00BA38}
+% \definecolor{myblue}{HTML}{619CFF}
+% \newcommand{\mred}[1]{\textcolor{myred}{#1}}
 
 % Fancy headers
 \fancyhead{}
@@ -63,26 +73,34 @@
 
 \input{titlepage}
 
-\pagestyle{empty}
-\section*{Summary}
-%\input{abstracts/abstract_EN.tex}
-\section*{Key words}
-%\input{abstracts/title&kws_EN.tex}
+\onehalfspacing
 
-\newpage
 \pagestyle{empty}
-\section*{Streszczenie}
+\section*{\centering Summary}
+\input{abstract.tex}
+\section*{\centering Keywords}
+\input{kws.tex}
+\section*{\centering Title of the thesis in Polish language}
+Struktura zależnościowa koordynacji w języku angielskim: podejście powierzchniowo-składniowe
+
+% \newpage
+% \pagestyle{empty}
+% \section*{Streszczenie}
 %\input{abstracts/abstract_PL.tex}
-\section*{Słowa kluczowe}
+% \section*{Słowa kluczowe}
 %\input{abstracts/title&kws_PL.tex}
 
 % ToC %
 \tableofcontents
 
+% acknowledgements <3
+\chapter*{Acknowledgements}
+    \input{thanks.tex}
+
 % Chapters
 \pagestyle{fancy}
 \chapter{Introduction}\label{ch:introduction}
-    \input{introduction}
+    \input{intro-bad}
 \chapter{Theoretical background}
     \input{theory}
 \chapter{Data processing}
