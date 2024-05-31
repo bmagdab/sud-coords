@@ -1,6 +1,6 @@
 \documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
-% \usepackage[T1]{fontenc}
+% \usepackage[T4,T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{polski}
 \usepackage{fancyref}
@@ -38,6 +38,7 @@
 \usepackage{caption}
 \usepackage{datetime}
 \usepackage{setspace}
+\usepackage{tabularray}
 %\usepackage[name = Example, 
 %	labelsep = period, 
 %	justification = centering,
@@ -60,6 +61,10 @@
 \fancyhead[R]{\footnotesize Chapter \thechapter }
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
+
+\makeatletter
+\check@mathfonts
+\makeatother
 
 % For bibliography
 % \usepackage[backend=biber,style=apa,sorting=nyt]{biblatex}
@@ -95,22 +100,27 @@ Struktura zależnościowa koordynacji w języku angielskim: podejście powierzch
 
 % acknowledgements <3
 \chapter*{Acknowledgements}
-    \input{thanks.tex}
+    % \input{thanks.tex}
 
 % Chapters
 \pagestyle{fancy}
 \chapter{Introduction}\label{ch:introduction}
-    \input{intro-bad}
+    % \input{introduction}
 \chapter{Theoretical background}
-    \input{theory}
+    % \input{theory}
 \chapter{Data processing}
-    \input{technical}
+    % \input{technical}
 \chapter{Statistical analysis}
     \input{statistics}
+\chapter{Discussion}\label{ch:discussion}
+    \input{discussion}
 
 \appendix
+\captionsetup{labelfont=bf}
 \chapter{Example of a CoNLL-U representation}\label{ap:conllu}
-    \input{inputs/ex-conll.tex}
+    % \input{inputs/ex-conll.tex}
+\chapter{Shorter left conjuncts in coordinations grouped by genres}\label{ap:genres}
+    \input{inputs/genres.tex}
 
 \bibliography{bibliography}
 

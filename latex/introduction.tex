@@ -1,1 +1,27 @@
-The aim of this work is to expand on already existing research on the coordinate structures in the English language.
+The aim of this work is to expand on already existing research on the coordinate structures in the English language. An example of a coordination from the Corpus of Contemporary American English \citep{coca} (COCA, henceforth) is given in (\ref{ex:gov-left}) -- the word \textsl{and} serves as the conjunction, \textsl{this} and \textsl{so many things} as the conjuncts.
+
+\begin{exe}
+    \ex\label{ex:gov-left}
+    We're opposites \textsl{in} [[this] and [so many things]].
+\end{exe}
+
+This coordination is consistent with the observation that in English often the conjuncts on the left of a coordination are shorter than the ones on the right. According to \cite{prz:woz:23} however, the placement of the coordination's governor (the head of the whole structure, the word in in the example above) might have an influence on the way the coordination is structured: if the governor is on the left (as in (\ref{ex:gov-left})) or absent from the coordination altogether (as in (\ref{ex:no-gov})), then the left conjunct will be shorter. That is not necessarily the case if the governor is on the right (as in (\ref{ex:gov-right})).
+
+\begin{exe}
+    \ex\label{ex:no-gov}
+    [[She was right], but [he didn't want to say so]].
+\end{exe}
+
+\begin{exe}
+    \ex\label{ex:gov-right}
+    [[Cuban flags unfurled from windows] and [women wept]], Perez \textsl{says}.
+\end{exe}
+
+The Dependency Length Minimization effect is proposed as an explanation for this, which paired with the results of the research provides an argument for symmetric theories of coordination and against asymmetric ones. There were however some limitations to the research that needed to be addressed. The study was based on the Penn Treebank, a corpus already annotated with constituency structures. The presence of a manually approved syntactic annotation is a huge advantage for research like this, but unfortunately the corpus describes only a narrow fragment of the English language -- it is made up exclusively of the material from the Wall Street Journal and consists of 1.25M tokens, among which there were only 21,825 coordinations to analyse.
+
+A replication of those results using a different resource has already been attempted and described in an unpublished manuscript by \cite{prz:etal:24}. The results were similar, but more precise -- they supported not symmetric approaches to coordination in general, but specifically the multi-headed one. The corpus used there was COCA, which consists of over one billion words found in eight different genres ranging from academic to spoken. Unfortunately, it does not have any syntactic annotation that would immediately allow for data extraction and analysis similar to those in the study described above -- it had to be annotated automatically. Because of that, the quality of the data was significantly lower -- only 50.1\% of the coordinations included in the evaluation of data were parsed and extracted correctly.
+
+Issues with the data could possibly appear either at the parsing stage or at the extraction stage, and using Surface Syntactic Universal Dependencies (SUD) could help with both of those. According to \cite{tuo:prz:lac:21}, for some parsers (particularly the graph-based ones) the SUD annotation scheme might be easier to learn than Universal Dependencies -- the annotation scheme used in the replication study mentioned above. As for the issues at the extraction stage, the SUD scheme has some structural benefits, that can be used to create more accurate heuristics.
+
+Work reported in this thesis is based on COCA annotated automatically using Stanza \cite{qi2020stanza}, a graph-based dependency parser, in accordance with the SUD annotation scheme. The structure of this thesis is the following: Chapter 2 describes in more detail some of the theoretical aspects mentioned
+in the current chapter -- this includes previous findings on coordinations in English, the Dependency Length Minimization effect and how it corresponds to different annotation schemes used in dependency treebanks, relevant differences between the UD and SUD annotation schemes and why the syntactic scheme seems to be more appropriate here. Chapter 3 describes how the corpus data was prepared for analysis -- from training the parser to extracting the information about coordinate structures. Chapter 4 presents the analysis of the data, which is discussed in Chapter 5. Finally Chapter 6 covers the limitations of this research.

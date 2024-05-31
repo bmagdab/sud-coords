@@ -1,28 +1,27 @@
-\begin{figure}
-\rotatebox{90}{
-\begin{minipage}{700pt}
-	\centering
-	\begin{dependency}[show label]
-	\begin{deptext}[column sep=0.4cm]
-	This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
-	 \end{deptext} 
-	\depedge{2}{1}{det} 
-	\depedge[show label]{4}{2}{subj} 
-	\depedge[show label]{4}{3}{mod} 
-	\deproot[show label, edge height=2cm]{4}{root} 
-	\depedge{4}{5}{mod} 
-	\depedge{4}{6}{comp:aux} 
-	\depedge{8}{7}{det} 
-	\depedge{6}{8}{comp:obj} 
-	\depedge[show label]{10}{9}{cc} 
-	\depedge[show label, edge height=1.5cm]{4}{10}{conj} 
-	\depedge[show label]{10}{11}{udep} 
-	\depedge{11}{12}{comp:obj} 
-	\end{dependency}
+\begin{figure}[h]
+\begin{adjustwidth}{-50pt}{-50pt}
+\centering\small
+\begin{dependency}[show label]
+\begin{deptext}[column sep=0.4cm]
+This\& magma\& often\& does\& not\& reach\& the\& surface\& but\& cools\& at\& depth.\\
+	\end{deptext} 
+\depedge{2}{1}{det} 
+\depedge[show label]{4}{2}{subj} 
+\depedge[show label]{4}{3}{mod} 
+\deproot[show label, edge height=2cm]{4}{root} 
+\depedge{4}{5}{mod} 
+\depedge{4}{6}{comp:aux} 
+\depedge{8}{7}{det} 
+\depedge{6}{8}{comp:obj} 
+\depedge[show label]{10}{9}{cc} 
+\depedge[show label, edge height=1.5cm]{4}{10}{conj} 
+\depedge[show label]{10}{11}{udep} 
+\depedge{11}{12}{comp:obj} 
+\end{dependency}
 
-	\raggedright
-	\input{inputs/conllutable}
-\end{minipage}
-}
-\caption{conllu}
+\vspace{.5cm}
+
+\input{inputs/conllutable}
+\caption{A SUD dependency tree with a corresponding CoNLL-U table. Columns in the table contain the following information in this order: word index, word form or punctuation symbol, lemma of the word, UD part-of-speech, optional part-of-speech tag, morphological features, ID of the dependency head of the word, SUD dependency label, Enhanced UD dependencies (not included in SUD trees), miscellaneous information.}
+\end{adjustwidth}
 \end{figure}

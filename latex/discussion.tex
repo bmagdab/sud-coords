@@ -1,0 +1,33 @@
+\makeatletter
+\check@mathfonts
+\makeatother
+
+\begin{exe}
+\ex\label{ex:ud-heads}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
+	\begin{deptext}[column sep=.4cm]
+		 This\& system\& is\& efficient\& and\& accurate.\\
+        \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge{4}{2}{nsubj} 
+	\depedge{4}{3}{cop} 
+	\deproot{4}{root} 
+	\depedge{6}{5}{cc} 
+	\depedge{4}{6}{conj} 
+\end{dependency}
+\end{exe}
+
+\begin{exe}
+\ex\label{ex:sud-heads}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
+	\begin{deptext}[column sep=.4cm]
+		 This\& system\& is\& efficient\& and\& accurate.\\
+        \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge{3}{2}{subj} 
+	\deproot{3}{root} 
+	\depedge{3}{4}{comp:pred} 
+	\depedge{6}{5}{cc} 
+	\depedge{4}{6}{conj} 
+\end{dependency}
+\end{exe}
