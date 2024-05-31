@@ -128,10 +128,18 @@ def generate_on_file(sents_file, scheme):
     return predicted
 
 
-ud_model_file = 'en_compare-ud_charlm_parser.pt'
-sud_model_file = 'en_combined-sud_charlm_parser.pt'
-sud_test_file = 'en_combined-ud-test.conllu'
-ud_test_file = 'en_compare-ud-test.conllu'
+# model ogolny
+# ud_model_file = 'en_compare-ud_charlm_parser.pt'
+# sud_model_file = 'en_combined-sud_charlm_parser.pt'
+# sud_test_file = 'en_combined-ud-test.conllu'
+# ud_test_file = 'en_compare-ud-test.conllu'
+
+# model mowiony
+ud_model_file = 'en_comp-spok-ud_charlm_parser.pt'
+sud_model_file = 'en_spok-sud_charlm_parser.pt'
+sud_test_file = 'en_spok-ud-test.conllu'
+ud_test_file = 'en_comp-spok-ud-test.conllu'
+
 if args.c:
     sud_test_file = get_conjs(sud_test_file)
     ud_test_file = get_conjs(ud_test_file)
