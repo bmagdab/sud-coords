@@ -39,6 +39,9 @@
 \usepackage{datetime}
 \usepackage{setspace}
 \usepackage{tabularray}
+\usepackage[export]{adjustbox} %cropped plot
+\usepackage{wrapfig}
+\usepackage[wide]{sidecap} %caption next to figure
 %\usepackage[name = Example, 
 %	labelsep = period, 
 %	justification = centering,
@@ -95,32 +98,61 @@ Struktura zależnościowa koordynacji w języku angielskim: podejście powierzch
 % \section*{Słowa kluczowe}
 %\input{abstracts/title&kws_PL.tex}
 
+% setting diagram heights and lengths
+\newlength{\treeheight}
+\newlength{\treewidth}
+\settoheight{\treeheight}{
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \depedge{9}{1}{}
+    \depedge{1}{7}{}
+    \depedge{7}{6}{}
+    \wordgroup{1}{1}{5}{}
+    \wordgroup{1}{7}{8}{}
+\end{dependency}
+}
+\settowidth{\treewidth}{
+\begin{dependency}[theme = simple]
+    \begin{deptext}
+        $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
+    \end{deptext}
+    \wordgroup{1}{2}{3}{}
+    \wordgroup{1}{5}{9}{}
+\end{dependency}
+}
+
 % ToC %
 \tableofcontents
 
 % acknowledgements <3
 \chapter*{Acknowledgements}
-    % \input{thanks.tex}
+    \input{thanks}
 
 % Chapters
 \pagestyle{fancy}
 \chapter{Introduction}\label{ch:introduction}
-    % \input{introduction}
-\chapter{Theoretical background}
-    % \input{theory}
-\chapter{Data processing}
-    % \input{technical}
-\chapter{Statistical analysis}
+    \input{introduction}
+\chapter{Theoretical background}\label{ch:theory}
+    \input{theory}
+\chapter{Data processing}\label{ch:technical}
+    \input{technical}
+\chapter{Statistical analysis}\label{ch:stats}
     \input{statistics}
-\chapter{Discussion}\label{ch:discussion}
+\chapter{Discussion and limitations}\label{ch:discussion}
     \input{discussion}
+\chapter{Summary}
+    \input{summary}
 
 \appendix
 \captionsetup{labelfont=bf}
 \chapter{Example of a CoNLL-U representation}\label{ap:conllu}
-    % \input{inputs/ex-conll.tex}
+    \input{inputs/ex-conll.tex}
 \chapter{Shorter left conjuncts in coordinations grouped by genres}\label{ap:genres}
     \input{inputs/genres.tex}
+\chapter{Logistic regression results after excluding the spoken data}
+    \input{inputs/logit-written.tex}
 
 \bibliography{bibliography}
 
