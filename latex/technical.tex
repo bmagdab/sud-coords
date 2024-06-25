@@ -3,23 +3,45 @@ The data used in this work is based on the Corpus of Contemporary American Engli
 \section{Parser training}
 Stanza is a Python package intended for natural language analysis, which contains multiple processors responsible for different steps of said analysis, e.g. tokenisation, lemmatisation, part-of-speech tagging, dependency parsing, sentiment analysis. All of the processors are neural networks, which together are put into a pipeline that takes raw text as input and returns documents with parsed sentences as output. The default parsing model provided by Stanza for English annotates according to the UD scheme, therefore two processors -- part-of-speech tagger and dependency parser -- had to be trained to use the SUD scheme.
 
-The dependency parser creates the dependency trees that can later be searched for coordinations. The part-of-speech tagger assigns the part of speech as well as the features appropriate for each word in the input. The parts of speech used in SUD are the same as in UD, but the features may include additional information about shared dependencies, as was explained in Section \ref{sec:shared-deps}. If the neural network is trained on data containing this information, it can than be able to determine which of the dependencies are shared and which are private to specific conjuncts. 
+The dependency parser creates dependency trees that can later be searched for coordinations. The part-of-speech tagger assigns the part of speech as well as the features appropriate for each word in the input. Parts of speech used in SUD are the same as in UD, but the features may include additional information about shared dependencies, as was explained in Section \ref{sec:shared-deps}. If the neural network is trained on data containing this information, it can than be able to determine which of the dependencies are shared and which are private to specific conjuncts. 
 
 Dependency trees as shown in previous chapters, though possibly comprehensible for people, are not written in a way that is easily understandable by computer programs, including parsers. \cite{buchholz-marsi-2006-conll} created the CoNLL-X format, which was first intended for the comparison of parser outputs in a dependency parsing shared task. Today this format is widely used for representing dependency trees in a plain-text form. The UD project adapted the format to their needs by replacing some of the information included in CoNLL-X and thus creating the CoNLL-U format, now also used for SUD data. Appendix \ref{ap:conllu} shows an example of an SUD dependency tree presented as a tree and in the CoNLL-U format.
 
-Training was conducted using the scripts made available by the Stanza developers.\footnote{\url{https://github.com/stanfordnlp/stanza-train}} The models were trained on the English SUD corpora, which were created by converting the UD corpora into SUD using a set of graph conversion rules developed by the authors of SUD \citep{gerdes-etal-2018-sud}.\footnote{\href{https://github.com/surfacesyntacticud/tools/blob/v2.12/converter/grs/UD_to_SUD.grs}{https://github.com/surfacesyntacticud/tools/blob/v2.12/converter/grs/UD_to_SUD.grs}} If a corpus is large enough, it is split into three parts: training, development and testing. The training set is used to expose the parser to the correct dependency trees and based on that a prediction model is created. The model is tuned using the development set -- the model tries to predict what is the correct dependency tree for a sentence and the prediction is then confronted with the data in the set. Adjustments are made until there is no gain in the scores acheived by the model. The testing set is used later to evaluate the performance of the model -- model creates dependency trees for the sentences in the testing set and those trees are compared to the original, manually annotated ones. This way the evaluation is more accurate, because the model has not been trained on this set of trees therefore it could not learn what the dependency trees for those specific sentences should look like.
+Training was conducted using the scripts made available by the Stanza developers.\footnote{\url{https://github.com/stanfordnlp/stanza-train}} The models were trained on the English SUD corpora, which were created by converting the UD corpora into SUD using a set of graph conversion rules developed by the authors of SUD \citep{gerdes-etal-2018-sud}.\footnote{\url{https://github.com/surfacesyntacticud/tools/blob/v2.12/converter/grs/UD\_to\_SUD.grs}} If a corpus is large enough, it is split into three parts: training, development and testing. The training set is used to expose the parser to the correct dependency trees and based on that a prediction model is created. The model is tuned using the development set -- the model tries to predict the correct dependency tree for a sentence and the prediction is then confronted with the data in the set. Adjustments are made until there is no gain in the scores acheived by the model. The testing set is used later to evaluate the performance of the model -- model creates dependency trees for the sentences in the testing set and those trees are compared to the original, manually annotated ones. This way the evaluation is more accurate, because the model has not been trained on this set of trees and, therefore, it could not learn what the dependency trees for those specific sentences should look like.
 
-Training a model requires word vector data (which is provided with the default model for English) and a prepared treebank -- this means that all of the possible annotations from a treebank have to be listed for the prediction model to choose from. After all the needed files were provided, the training script was run. The batch size was set to 1000 and the dropout rate was 0.33. This means that the whole training dataset was split into batches, each with 1000 elements, which were then given to the model to assign weigths to different possible parses of a sentence. Dropout rate is the proportion of nodes in the neural network that are dropped during training. Without any dropout, a model might become overfitted for the training data. This means that it will be very good at predicting annotations for the sentences it has already seen, but not so much with any other data. The dropout rate chosen for training here was recommended in the training documentation, the batch size was dictated by the hardware limitations.
+Training a model requires word vector data (which is provided with the default model for English) and a treebank with a list of all possible dependency labels. After all the needed files were provided, the training script was run. The batch size was set to 1000 and the dropout rate was 0.33. This means that the whole training dataset was split into batches, each with 1000 elements, which were then given to the model to assign weigths to different possible parses of a sentence. Dropout rate is the proportion of nodes in the neural network that are dropped during training. Without any dropout, a model might become overfitted for the training data. This means that it would be very good at predicting annotations for the sentences it has already seen, but not so much with any other data. The dropout rate chosen for training here was recommended in the training documentation, the batch size was dictated by the hardware limitations.
 % duże uproszczenia powyżej, może powinnam to poprawić
 
-The following subsections describe the corpora used to train the models for this study.
+The following subsections describe the corpora used to train the models for this study. Summary of that information is in Table \ref{tab:corpora}.
+
+\begin{table}[h!]
+\scalebox{0.9}{
+\begin{tabular}{r || p{2.5cm} | p{5cm} | p{3.5cm}}
+	name & no. of tokens & source texts & annotation style\\
+	\hline\hline
+	\rowcolor{lightgray} \multicolumn{4}{c}{combined model}\\
+	\hline\hline
+	EWT & 251 492 & weblogs, newsgroups, emails, reviews and question-answers & constituency, then converted to Stanford Dependencies, then to UD\\\hline
+	GUM & 228 399 & academic, Wikipedia articles, vlogs, conversations, courtroom transcripts, essays, fiction, forum, how-to guides, interviews, letters, news stories, podcasts, political speeches, textbooks, travel guides & Stanford Dependencies, then converted to UD\\\hline
+	ParTUT & 49 602 & legal texts, Wikipedia articles, public talk transcripts & own annotation style, then converted to UD\\\hline
+	total & \multicolumn{3}{l}{529 493}\\
+	\hline\hline
+	\rowcolor{lightgray} \multicolumn{4}{c}{spoken model}\\
+	\hline\hline
+	Atis & 61 879 & transcriptions of questions about flight information & natively UD\\\hline
+	GUM (parts) & 51 451 & interviews, conversations, vlogs & Stanford Dependencies, then converted to UD\\\hline
+	total & \multicolumn{3}{l}{113 330}
+\end{tabular}
+}
+\caption{Summary of the information about corpora used to train models}\label{tab:corpora}
+\end{table}
 
 \subsection{Combined model}
 The combined model was used to annotate most of the data analysed in this study. It was trained on the combined training sets from the EWT, GUM and ParTUT corpora, all available converted to the SUD annotation scheme.\footnote{\url{https://surfacesyntacticud.github.io/data/}} A corresponding model was also trained for the UD scheme to compare the performance on those two schemes.
 
 EWT is the English Web Treebank. The data was collected between the years 1999 and 2011 and comes from 5 primary sources: weblogs, newsgroups, emails, reviews and question-answers. In total, the corpus contains 254,820 words, which makes it the biggest available SUD corpus for English. The texts originally had constituency annotation, which was then automatically converted into Stanford Dependencies and then manually corrected to UD. 
 
-The second corpus used for this model was GUM -- the Georgetown University Multilayer corpus. The early versions of GUM were annotated according to the Stanford Dependencies scheme, later they were manually converted into UD and the subsequent additions to the corpus have been annotated natively using UD. The corpus contains 228,399 tokens and is made up of a variety of styles, for instance academic, interviews, travel guides, letters, how-to guides and forum discussions.\footnote{The GUMReddit corpus, which contains the forum discussions, was here included in the whole GUM corpus. Before training any models it is required to run a script that recovers the textual data that is by default not included. The script is available in the GUM corpus repository: \href{https://github.com/amir-zeldes/gum/blob/master/get_text.py}{https://github.com/amir-zeldes/gum/blob/master/get_text.py}.}
+The second corpus used for this model was GUM -- the Georgetown University Multilayer corpus. The early versions of GUM were annotated according to the Stanford Dependencies scheme, later they were manually converted into UD and the subsequent additions to the corpus have been annotated natively using UD. The corpus contains 228,399 tokens and is made up of a variety of styles, for instance academic, interviews, travel guides, letters, how-to guides and forum discussions.\footnote{The forum discussions in the GUM corpus come from the GUMReddit corpus, which requires special preparation. Before training any models, it is necessary to run a script that recovers the textual data, which is by default not included in the subcorpus. The script is available in the GUM corpus repository: \url{https://github.com/amir-zeldes/gum/blob/master/get_text.py}.} 
 
 The third corpus used for training the combined model was one based on the English part of ParTUT, the multilingual parallel treebank from the University of Turin. It consists of legal texts, Wikipedia articles and transcriptions of TED Talks. It was originally manually annotated in a style specific to the treebanks developed at the University of Turin, then converted to UD. The corpus has 49,602 tokens, which is a lot less compared to the corpora described earlier, but is still a significant contribution to the model. 
 
@@ -32,79 +54,138 @@ Corpora listed above were chosen because of their size and the consistency of an
 \subsection{Spoken model}
 Spoken and written language differ significantly, therefore a model trained mainly on one type of data can perform poorly when presented with the other type. Most of the corpus data comes from written text, as it is easier to obtain. This experiment involves training a model specialising in spoken data to avoid the poor quality resulting from an ill-fitted model. 
 
-\begin{table}[h!]
-\begin{adjustwidth}{-20pt}{20pt}
-	\begin{tabular}{r || p{2.5cm} | p{5cm} | p{3.5cm}}
-		name & no. of tokens & source texts & annotation style\\
-		\hline\hline
-		\rowcolor{lightgray} \multicolumn{4}{c}{combined model}\\
-		\hline\hline
-		EWT & 251 492 & weblogs, newsgroups, emails, reviews and question-answers & constituency, then converted to Stanford Dependencies, then to UD\\\hline
-		GUM & 228 399 & academic, Wikipedia articles, vlogs, conversations, courtroom transcripts, essays, fiction, forum, how-to guides, interviews, letters, news stories, podcasts, political speeches, textbooks, travel guides & Stanford Dependencies, then converted to UD\\\hline
-		ParTUT & 49 602 & legal texts, Wikipedia articles, public talk transcripts & own annotation style, then converted to UD\\\hline
-		total & \multicolumn{3}{l}{529 493}\\
-		\hline\hline
-		\rowcolor{lightgray} \multicolumn{4}{c}{spoken model}\\
-		\hline\hline
-		Atis & 61 879 & transcriptions of questions about flight information & natively UD\\\hline
-		GUM (parts) & 51 451 & interviews, conversations, vlogs & Stanford Dependencies, then converted to UD\\\hline
-		total & \multicolumn{3}{l}{113 330}
-	\end{tabular}
-\end{adjustwidth}
-\caption{Summary of the information about corpora used to train models}\label{tab:corpora}
-\end{table}
-
-The corpora used for this model were parts of the GUM corpus, specifically those with interviews, conversations and vlogs (51,451 tokens) and the Atis corpus. Atis comprises sentences from the Airline Travel Informations dataset, which come from transcriptions of people asking automated inquiry systems for flight information. The corpus has 61,879 tokens and was natively annotated in UD. 
+The corpora used for this model were parts of the GUM corpus, specifically those with interviews, conversations and vlogs (51,451 tokens), and the Atis corpus. Atis comprises sentences from the Airline Travel Informations dataset, which come from transcriptions of people asking automated inquiry systems for flight information. The corpus has 61,879 tokens and was natively annotated in UD. 
 
 \section{Data extraction}
 %OMÓW TO NA PRZYKŁADZIE
 %MOŻE DAJ WIĘCEJ CODE SNIPPETS?
 % woah co to za zlota mysl powyzej, przestan z tymi code snippets
 
-The scripts used for parsing and extracting data are available in a github repository.\footnote{Scripts used here (available at \url{https://github.com/bmagdab/sud-coords}) were based on those used by \cite{prz:etal:24} (available at \url{https://github.com/bmagdab/LGPB23-24}).} The extraction process will be illustrated by the sentence \textsl{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution}.\footnote{Modified version of the sentence \texttt{GUM\_bio\_bernoulli-9} from the GUM corpus \citep{Zeldes2017}} 
+The scripts used for parsing and extracting data are available in a github repository.\footnote{Scripts used here (available at \url{https://github.com/bmagdab/sud-coords}) were based on those used by \cite{prz:etal:24} and written by the author of this thesis (available at \url{https://github.com/bmagdab/LGPB23-24}) with the exception of the script for cleaning and splitting the text into sentences.} The coordination extraction process will be illustrated by the sentence \textsl{The family came originally from Antwerp, but emigrated to escape the Spanish persecution}.\footnote{Modified version of the sentence \texttt{GUM\_bio\_bernoulli-9} from the GUM corpus \citep{Zeldes2017}.} 
 
-Texts from the COCA corpus are first split into sentences using the Trankit parser \citep{nguyen2021trankit}, which deals with the task more accurately than Stanza. Those sentences are then put into the Stanza's parsing pipeline: first the sentences are tokenised, then lemmas of all of the words in the sentence are found, parts of speech and morphological features are assigned and finally the dependency trees for all of the sentences are created. After running through the pipeline, the example sentence has a dependency tree shown in (\ref{ex:bernoulli}). 
+Texts from the COCA corpus are first cleaned -- any markers, filler symbols and incomplete sentences are removed. The next step is splitting the texts into sentences using the Trankit parser \citep{nguyen2021trankit}, which deals with the task more accurately than Stanza.\footnote{Special thanks to Adam Głowacki for the script that cleans the corpus texts and splits them into sentences.} Those sentences are then put into the Stanza's parsing pipeline: first the sentences are tokenised, then lemmas of all of the words in the sentence are found, parts of speech and morphological features are assigned and finally the dependency trees for all of the sentences are created. After running through the pipeline, the example sentence has a dependency tree shown in (\ref{ex:bernoulli}) (\texttt{punct} dependencies have been excluded for clarity). 
 
-\begin{adjustwidth}{-90pt}{70pt}
-\small
+\vspace{2ex}
 \begin{exe}
 \ex\label{ex:bernoulli}
+\scalebox{0.75}{
+\hspace{-1.75em}
 \begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
 	\begin{deptext}
-		 The\& Bernoulli\& family\& came\& originally\& from\& Antwerp\& ,\& but\& emigrated\& to\& escape\& the\& Spanish\& persecution\& .\\
+		 The\& family\& came\& originally\& from\& Antwerp\&,\& but\& emigrated\& to\& escape\& the\& Spanish\& persecution\&.\\
 	 \end{deptext} 
-	\depedge{3}{1}{det} 
-	\depedge{3}{2}{compound} 
-	\depedge{4}{3}{subj} 
-	\deproot{4}{root} 
-	\depedge{4}{5}{mod} 
-	\depedge{4}{6}{udep} 
-	\depedge{6}{7}{comp:obj} 
-	\depedge{10}{8}{punct} 
-	\depedge{10}{9}{cc} 
-	\depedge[edge height=9ex]{4}{10}{conj} 
-	\depedge{10}{11}{mod} 
-	\depedge{11}{12}{comp:obj} 
-	\depedge{15}{13}{det} 
-	\depedge{15}{14}{mod} 
-	\depedge{12}{15}{comp:obj} 
-	\depedge[edge height=12ex]{4}{16}{punct} 
+	\depedge{2}{1}{det} 
+	\depedge{3}{2}{subj} 
+	\depedge{3}{4}{mod} 
+	\depedge{3}{5}{udep} 
+	\depedge{5}{6}{comp:obj} 
+	\depedge{9}{8}{cc} 
+	\depedge[edge height=9ex]{3}{9}{conj} 
+	\depedge{9}{10}{mod} 
+	\depedge{11}{14}{comp:obj} 
+	\depedge{10}{11}{comp:obj} 
+	\depedge{14}{12}{det} 
+	\depedge{14}{13}{mod} 
+	\deproot{3}{root} 
 \end{dependency}
+}
 \end{exe}
-\end{adjustwidth}
+\vspace{1ex}
 
-Every dependency tree is then searched for coordinations, which are marked by the dependency label \texttt{conj}. In (\ref{ex:bernoulli}) there is one \texttt{conj} dependency that connects the words \textsl{came} and \textsl{emigrated}. If such a dependency is found, the algorithm looks for every conjunct within that coordinatsion and checks whether there are any other coordinations embedded inside of the one already found -- if there are any, they are separated and analysed later. After all coordinations in a document are found, the algorithm searches for all information necessary for later analysis: the conjunction, heads of conjuncts, the exact text and length of the left and right conjunct, the governor position and additional information about parts of speech and morphological features of all of the elements of the coordination. In the example (\ref{ex:bernoulli}) the heads of the left and right conjuncts are the words \textsl{came} and \textsl{emigrated} respectively. The word \textsl{do} has no head in this sentence, therefore there is no governor of the coordination. If the head of the right conjunct has a \texttt{cc} dependency, that dependency is the conjunction of the coordination -- in (\ref{ex:bernoulli}) this is the word \textsl{but}. 
+Every dependency tree is then searched for coordinations, which are marked by the dependency label \texttt{conj}. In (\ref{ex:bernoulli}) there is one \texttt{conj} dependency that connects the words \textsl{came} and \textsl{emigrated}. If such a dependency is found, the algorithm looks for every conjunct within that coordination and checks whether there are any other coordinations embedded inside of the one already found -- if there are any, they are separated and analysed later. After all coordinations in a sentence are found, the algorithm searches for all information necessary for later analysis: the conjunction, heads of conjuncts, the exact text and length of the left and right conjunct, the governor position and additional information about parts of speech and morphological features of all of the elements of the coordination. In the example (\ref{ex:bernoulli}), the heads of the left and right conjuncts are the words \textsl{came} and \textsl{emigrated} respectively. The word \textsl{came} has no governor in this sentence, therefore there is no governor of the coordination. If the head of the right conjunct has a \texttt{cc} dependency, that dependency is the conjunction of the coordination -- in (\ref{ex:bernoulli}) this is the word \textsl{but}. The tree in (\ref{ex:bernoulli-1}) is the tree from (\ref{ex:bernoulli}) repeated, but the dependencies found to be relevant until now are emphasised and heads of conjuncts are in bold. 
 
-Then the algorithm looks for the text of the right conjunct -- it does not add to the conjunct the dependency labelled \texttt{cc}, because this is a seperate element of the coordination. It does not add the \texttt{punct} dependency either, if it appears at the beginning of the conjunct, because a conjunct has to start with a word. The only other dependency that the word \textsl{emigrated} has is \texttt{mod}. Since it appears after the head of the right conjunct, it can be either private to the conjunct or shared by the whole coordination. The heuristic applied here after \cite{prz:etal:24} is that if any of the other conjuncts have a dependency like this, this dependency is private. Otherwise it is shared by the whole coordination. In this case the only other conjunct is headed by the word \textsl{came} and it does have a \texttt{mod} dependency, therefore each head has a private \texttt{mod} dependency that is included in the appropriate conjunct. After all direct dependencies of the head are covered, the whole branches starting with those direct dependencies are added to the conjunct. This means that since the word \textsl{to} from the \texttt{mod} dependency has been added to the conjunct, this words dependencies are also added -- here this is the word \textsl{escape}. This continues until there are no more nodes in the branch of the tree to add. The text of the right conjunct is found this way and it is \textsl{emigrated to escape the Spanish persecution}. The process is then repeated for the left conjunct. In (\ref{ex:bernoulli}) the word \textsl{came} has three dependencies: \texttt{subj}, \texttt{mod} and \texttt{udep}. The rule here is mirroring the one from the right conjunct -- dependencies appearing on the left side of the left conjunct are private to the conjunct if any of the other conjuncts have the same dependency, otherwise they are shared by the whole coordination. The \texttt{mod} and \texttt{udep} dependencies appear after the head of the conjunct and are therefore automatically added to the conjunct. The \texttt{subj} dependency has to be checked -- this time the algorithm finds that no other conjunct has the same dependency, therefore this dependency has to be shared by the whole coordination and is not included in the left conjunct. The text of the left conjunct is found to be \textsl{came originally from Antwerp}. 
+\vspace{2ex}
+\begin{exe}
+\ex\label{ex:bernoulli-1}
+\scalebox{0.75}{
+\hspace{-1.75em}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax, edge style=densely dotted]
+	\begin{deptext}
+		 The\& family\& \textbf{came}\& originally\& from\& Antwerp\&,\& but\& \textbf{emigrated}\& to\& escape\& the\& Spanish\& persecution\&.\\
+	 \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge{3}{2}{subj} 
+	\depedge{3}{4}{mod} 
+	\depedge{3}{5}{udep} 
+	\depedge{5}{6}{comp:obj} 
+	\depedge[theme=night, edge style=solid]{9}{8}{cc} 
+	\depedge[edge height=9ex, theme=night, edge style={very thick, solid}]{3}{9}{conj} 
+	\depedge{9}{10}{mod} 
+	\depedge{11}{14}{comp:obj} 
+	\depedge{10}{11}{comp:obj} 
+	\depedge{14}{12}{det} 
+	\depedge{14}{13}{mod} 
+	\deproot[theme=night, edge style=solid]{3}{root} 
+\end{dependency}
+}
+\end{exe}
+\vspace{1ex}
 
-The last step is measuring the lengths of both conjuncts in characters, syllables and words. All of the information found during this process is put in a table similar to the Table \ref{tab:csv}.
+Then the algorithm looks for the text of the right conjunct -- it does not add to the conjunct the dependency labelled \texttt{cc}, because this is a separate element of the coordination. The only other dependency that the word \textsl{emigrated} has is \texttt{mod}. Since it appears after the head of the right conjunct, it can be either private to the conjunct or shared by the whole coordination. The heuristic applied here after \cite{prz:etal:24} is that if any of the other conjuncts have a dependency with the same label, this dependency is private. Otherwise it is shared by the whole coordination. In this case, the only other conjunct is headed by the word \textsl{came} and, as the tree in (\ref{ex:bernoulli-2}) illustrates, it does have a \texttt{mod} dependency, therefore each head has a private \texttt{mod} dependency that is included in the appropriate conjunct. So far, two words are sure to be in the right conjunct of the coordination and those are \textsl{emigrated to}.
 
-% \newlength{\colwid}
-% \setlength{\colwid}{.23\textwidth}
+\vspace{2ex}
+\begin{exe}
+\ex\label{ex:bernoulli-2}
+\scalebox{0.75}{
+\hspace{-1.75em}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax, edge style=densely dotted]
+	\begin{deptext}
+		 The\& family\& \textbf{came}\& originally\& from\& Antwerp\&,\& but\& \textbf{emigrated}\& to\& escape\& the\& Spanish\& persecution\&.\\
+	 \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge{3}{2}{subj} 
+	\depedge[label style={fill=lightgray}, edge style=solid]{3}{4}{mod} 
+	\depedge{3}{5}{udep} 
+	\depedge{5}{6}{comp:obj} 
+	\depedge[theme=night, edge style=solid]{9}{8}{cc} 
+	\depedge[edge height=9ex, theme=night, edge style={very thick, solid}]{3}{9}{conj} 
+	\depedge[label style={fill=lightgray}, edge style=solid]{9}{10}{mod} 
+	\depedge{11}{14}{comp:obj} 
+	\depedge{10}{11}{comp:obj} 
+	\depedge{14}{12}{det} 
+	\depedge{14}{13}{mod} 
+	\deproot[theme=night, edge style=solid]{3}{root} 
+\end{dependency}
+}
+\end{exe}
+\vspace{1ex}
 
-\begin{table}
-\begin{adjustwidth}{-40pt}{-40pt}
-\centering\small\sffamily
+After all direct dependencies of the head are covered, the whole subtrees starting with those direct dependencies are added to the conjunct. This means that since the word \textsl{to} from the \texttt{mod} dependency has been added to the conjunct, this word's dependencies are also added -- here this is the word \textsl{escape}. This continues until there are no more nodes in the branch of the tree to add. The text of the right conjunct is found this way and it is \textsl{emigrated to escape the Spanish persecution}. The process is then repeated for the left conjunct. In (\ref{ex:bernoulli-2}) the word \textsl{came} has three dependencies: \texttt{subj}, \texttt{mod} and \texttt{udep}. The rule here is mirroring the one from the right conjunct -- dependencies appearing on the left side of the left conjunct are private to the conjunct if any of the other conjuncts have the same dependency, otherwise they are shared by the whole coordination. The \texttt{mod} and \texttt{udep} dependencies appear after the head of the conjunct and are therefore automatically added to the conjunct. The \texttt{subj} dependency has to be checked -- this time the algorithm finds that no other conjunct has the same dependency, therefore this dependency has to be shared by the whole coordination and is not included in the left conjunct. The text of the left conjunct is found to be \textsl{came originally from Antwerp}. The tree in (\ref{ex:bernoulli-3}) shows the whole coordination found in the sentence. 
+
+\vspace{2ex}
+\begin{exe}
+\ex\label{ex:bernoulli-3}
+\scalebox{0.75}{
+\hspace{-1.75em}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax, edge style=densely dotted]
+	\begin{deptext}
+		 The\& family\& \textbf{came}\& originally\& from\& Antwerp\&,\& but\& \textbf{emigrated}\& to\& escape\& the\& Spanish\& persecution\&.\\
+	 \end{deptext} 
+	\depedge{2}{1}{det} 
+	\depedge{3}{2}{subj} 
+	\depedge{3}{4}{mod} 
+	\depedge{3}{5}{udep} 
+	\depedge{5}{6}{comp:obj} 
+	\depedge[theme=night, edge style=solid]{9}{8}{cc} 
+	\depedge[edge height=9ex, theme=night, edge style={very thick, solid}]{3}{9}{conj} 
+	\depedge{9}{10}{mod} 
+	\depedge{11}{14}{comp:obj} 
+	\depedge{10}{11}{comp:obj} 
+	\depedge{14}{12}{det} 
+	\depedge{14}{13}{mod} 
+	\deproot[theme=night, edge style=solid]{3}{root} 
+	\wordgroup{1}{3}{6}{}
+	\wordgroup{1}{9}{14}{}
+\end{dependency}
+}
+\end{exe}
+\vspace{1ex}
+
+The last step is measuring the lengths of both conjuncts in characters, syllables and words. All of the information found during this process is put in a table similar to Table \ref{tab:csv}.
+
+\begin{table}[H]
+\centering\sffamily
+\scalebox{0.85}{
 \begin{tblr}{
 	row{odd[1-12]}={font=\bfseries},
 	hlines, vlines
@@ -120,32 +201,8 @@ The last step is measuring the lengths of both conjuncts in characters, syllable
 	R.dep.label & R.words & R.syllables & R.chars\\
 	conj & 6 & 14 & 43\\
 	\SetCell[c=4]{l} sentence \\
-	\SetCell[c=4]{l} The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution. \\
+	\SetCell[c=4]{l} The family came originally from Antwerp, but emigrated to escape the Spanish persecution. \\
 \end{tblr}
-\caption{An example of a table with the extracted information about coordinations. Some columns are excluded for simplicity.}
-\label{tab:csv}
-\end{adjustwidth}
+}
+\caption{\centering An example of a table with the extracted information about coordinations. Some columns are excluded for simplicity.}\label{tab:csv}
 \end{table}
-
-% {\def\arraystretch{1.2}
-% \begin{table}
-% 	\small\sffamily\centering
-% \begin{tabular}{| p{\colwid} | p{\colwid} | p{\colwid} | p{\colwid} |}
-% 	\hline
-% 	governor.position & governor.word & conjunction.word & no.conjuncts\\\hline
-% 	0 & & but & 2\\\hline\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{L.conjunct}\\\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{came originally from Antwerp}\\\hline\hline
-% 	L.dep.label & L.words & L.syllables & L.chars\\\hline
-% 	root & 4 & 9 & 28\\\hline\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{R.conjunct}\\\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{emigrated to escape the Spanish persecution}\\\hline\hline
-% 	R.dep.label & R.words & R.syllables & R.chars\\\hline
-% 	conj & 6 & 14 & 43\\\hline\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{sentence}\\\hline
-% 	\multicolumn{4}{| p{4\colwid} |}{The Bernoulli family came originally from Antwerp, but emigrated to escape the Spanish persecution.}\\\hline
-% \end{tabular}
-% \caption{An example of a table with the extracted information about coordinations. Some columns are excluded for simplicity.}
-% \label{tab:csv}
-% \end{table}
-% }

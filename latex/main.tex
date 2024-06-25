@@ -5,19 +5,20 @@
 \usepackage{polski}
 \usepackage{fancyref}
 % \usepackage{expex}
-% \usepackage{hyphenat}
+\usepackage{hyphenat}
 % \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usepackage{tikz-dependency}
 \usepackage[table]{xcolor}
 % \usetikzlibrary{calc}
 % \usepackage[normalem]{ulem}
-% \usepackage{amsmath}
+\usepackage{amsmath}
 \usepackage{amssymb} % has the \square for annotation illustrations
 % \usepackage{amsthm}
 \usepackage{ragged2e} % text-alignment but better
 % \usepackage{floatrow}
 \usepackage{hyperref}
+\usepackage{url}
 % \usepackage{graphicx}
 \usepackage{fancyhdr}
 % \usepackage{fancyvrb}
@@ -49,7 +50,7 @@
 %\usepackage{knitr} % this is for later i think this might be useful
 
 \hypersetup{hidelinks}
-\urlstyle{same}
+\urlstyle{tt}
 
 \newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
 
@@ -89,7 +90,7 @@
 \section*{\centering Keywords}
 \input{kws.tex}
 \section*{\centering Title of the thesis in Polish language}
-Struktura zależnościowa koordynacji w języku angielskim: podejście powierzchniowo-składniowe
+Struktura zależnościowa koordynacji w języku angielskim: podejście powierzchniowo\hyp{}składniowe
 
 % \newpage
 % \pagestyle{empty}
@@ -152,7 +153,7 @@ Struktura zależnościowa koordynacji w języku angielskim: podejście powierzch
 \chapter{Shorter left conjuncts in coordinations grouped by genres}\label{ap:genres}
     \input{inputs/genres.tex}
 \chapter{Logistic regression results after excluding the spoken data}
-    \input{inputs/logit-written.tex}
+    \input{inputs/logit-written.tex}\label{ap:written}
 
 \bibliography{bibliography}
 

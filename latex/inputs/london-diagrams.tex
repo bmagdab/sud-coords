@@ -1,28 +1,5 @@
-\subsection{Conjunction-headed/Prague}
-The last approach discussed here is the one associated with the Prague Dependency Treebank, called the Prague approach by \cite{popel2013coordination} or the conjunction-headed approach by \cite{prz:woz:23}.
-
 \begin{exe}
-\ex\label{ex:prague}
-\begin{dependency}[theme = simple, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
-            \begin{deptext}
-    $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&,\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\\
-            \end{deptext}
-            \depedge{1}{9}{}
-            \depedge{9}{2}{}
-            \depedge{9}{6}{}
-            \depedge{9}{10}{}
-            \wordgroup{1}{2}{4}{c1}
-            \wordgroup{1}{6}{8}{c2}
-            \wordgroup{1}{10}{12}{c3}
-        \end{dependency}
-\end{exe}
-
-This is another example of symmetrical approaches, as here again the governor treats all of the conjuncts the same way -- in this case, it does not connect to any of them. Instead, there is a dependency connecting the governor and the conjunction, which then has the conjuncts of the coordination as its dependents.
-
-\vspace{-0.5\treeheight}
-\begin{exe}
-\ex\label{ex:prague-all}
-\raisebox{-0.5ex}{
+\ex\label{ex:london-again}
 \begin{minipage}[t]{2.5\treewidth}
 \begin{xlist}
 
@@ -36,9 +13,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\odot$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
     \end{deptext}
-    \depedge{1}{4}{}
-    \depedge{4}{2}{}
-    \depedge{4}{5}{}
+    \depedge{1}{2}{}
+    \depedge{1}{5}{}
+    \depedge{5}{4}{}
     \wordgroup{1}{2}{3}{}
     \wordgroup{1}{5}{9}{}
 \end{dependency}
@@ -53,9 +30,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\odot$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
     \end{deptext}
-    \depedge{1}{7}{}
-    \depedge{7}{2}{}
-    \depedge{7}{8}{}
+    \depedge{1}{2}{}
+    \depedge{1}{8}{}
+    \depedge{8}{7}{}
     \wordgroup{1}{2}{6}{}
     \wordgroup{1}{8}{9}{}
 \end{dependency}
@@ -73,9 +50,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\\
     \end{deptext}
-    \deproot[edge height=4ex]{3}{}
-    \depedge{3}{1}{}
-    \depedge{3}{4}{}
+    \deproot[edge height=4ex]{1}{}
+    \deproot[edge height=4ex]{4}{}
+    \depedge{4}{3}{}
     \wordgroup{1}{1}{2}{}
     \wordgroup{1}{4}{8}{}
 \end{dependency}
@@ -91,9 +68,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\\
     \end{deptext}
-    \deproot[edge height=4ex]{6}{}
-    \depedge{6}{1}{}
-    \depedge{6}{7}{}
+    \deproot[edge height=4ex]{1}{}
+    \deproot[edge height=4ex]{7}{}
+    \depedge{7}{6}{}
     \wordgroup{1}{1}{5}{}
     \wordgroup{1}{7}{8}{}
 \end{dependency}
@@ -110,9 +87,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\odot$\\
     \end{deptext}
-    \depedge{9}{3}{}
-    \depedge{3}{1}{}
-    \depedge{3}{4}{}
+    \depedge{9}{1}{}
+    \depedge{9}{4}{}
+    \depedge{4}{3}{}
     \wordgroup{1}{1}{2}{}
     \wordgroup{1}{4}{8}{}
 \end{dependency}
@@ -128,9 +105,9 @@ This is another example of symmetrical approaches, as here again the governor tr
     \begin{deptext}
         $\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\diamond$\&$\square$\&$\diamond$\&$\diamond$\&$\odot$\\
     \end{deptext}
-    \depedge{9}{6}{}
-    \depedge{6}{1}{}
-    \depedge{6}{7}{}
+    \depedge{9}{1}{}
+    \depedge{9}{7}{}
+    \depedge{7}{6}{}
     \wordgroup{1}{1}{5}{}
     \wordgroup{1}{7}{8}{}
 \end{dependency}
@@ -139,9 +116,4 @@ This is another example of symmetrical approaches, as here again the governor tr
 
 \end{xlist}
 \end{minipage}
-}
 \end{exe}
-
-\vspace{0.5\treeheight}
-
-This annotation style again generates new predictions about the preferred ordering of conjuncts. When the governor is on the left, as in (\ref{ex:prague}a--b), putting the shorter conjunct on the left is preferred, the same happens in (\ref{ex:prague}c--d), when there is no governor. When the governor is on the right, however, both (\ref{ex:prague}e--f) have the same dependency lengths, therefore neither of these is preferred, because neither will shorten the dependencies.

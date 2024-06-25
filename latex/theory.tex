@@ -66,12 +66,12 @@ Familiarity with dependency grammars helps understand the principle of Dependenc
 The study has shown that speakers deem sentences similar to (\ref{ex:dlm janitor1}) more acceptable than the ones similar to (\ref{ex:dlm janitor2}).\footnote{In the study, it is actually found that it is not the distance between the verb and the particle that affects the acceptability of sentences like those, but the syntactic complexity of the phrases within that distance. However, according to \cite{wasow2002postverbal}, syntactic complexity as a measure of dependency length correlates with many others proposed, including the number of intervening words.} Proposed explanations for this preference are based on language-processing constraints, which are usually said to be caused by working memory limitations. With longer dependencies, while reading or hearing a sentence, a person has to keep certain words in their working memory for a longer time. The longer the dependency, the harder the retrieval of the needed word from the working memory. Similar effects have been found in other studies, both psycholinguistic ones \citep{KING1991580, GIBSON19981} and those based on corpus research \citep{gildea-temperley-2007-optimizing, gildea-temperley-2010, futrell2020, dyer-2023}. 
 
 % the idea of dlm in grammar and dlm in usage
-The DLM effect has been observed both at the level of usage and at the level of grammar. The level of usage is visible in (\ref{ex:dlm janitor}) -- when there are multiple grammatical word orders available, people tend to choose those with shortest dependencies, because it makes the sentence easier to understand. As for DLM in grammar, an example taken from \cite[p.~20]{Hawkins-1994} is in (\ref{ex:hawkins-embed}). 
+The DLM effect has been observed both at the level of usage and at the level of grammar. The level of usage is visible in (\ref{ex:dlm janitor}) -- when there are multiple grammatical word orders available, people tend to choose those with shortest dependencies, because it makes the sentence easier to understand. As for DLM in grammar, an example taken from \citet[p.~20]{Hawkins-1994} is in (\ref{ex:hawkins-embed}). 
 \begin{exe}
 \ex\label{ex:hawkins-embed}
 \begin{xlist}
-	\ex[*] {Did _{S}[that John failed his exam] surprise Mary?}\label{ex:embedS}
-	\ex[] {Did _{NP}[that fact] surprise Mary?}\label{ex:embedNP}
+	\ex[*] {Did _{\text{S}}[that John failed his exam] surprise Mary?}\label{ex:embedS}
+	\ex[] {Did _{\text{NP}}[that fact] surprise Mary?}\label{ex:embedNP}
 \end{xlist}
 \end{exe}
 Both of the sentences in (\ref{ex:hawkins-embed}) have a constituent embedded inside of them. In (\ref{ex:embedS}) that constituent is a subordinate clause \textsl{that John failed his exam}, whereas in (\ref{ex:embedNP}) the constituent is a noun phrase \textsl{that fact}. Subordinate clauses are usually longer than noun phrases, therefore dependencies in sentences with embedded clauses can be much longer. According to the DLM principle, this makes the sentence more difficult to process and Hawkins argues that due to this processing difficulty the effect was grammaticalised in English and therefore sentences with clauses embedded this way have become ungrammatical. Since noun phrases are usually shorter, sentences similar to (\ref{ex:embedNP}) are allowed. 
@@ -210,8 +210,9 @@ Here, the most relevant part of the project are the rules for creating a depende
 \end{enumerate}
 Content words can otherwise be called ``lexical'' or ``semantic'' centres, which means their main purpose is to carry meaning in the sentence, whereas function words serve mostly a syntactic purpose. The difference between the two is visible in sentence (\ref{ex:ud eng tree}), where the word \textsl{participate} carries the meaning, therefore it is the content word and the root of the sentence. The word \textsl{will} is a function word and is attached to the content word.
 
-\begin{adjustwidth}{-40pt}{-40pt}
-\vspace{2ex}
+\vspace{3ex}
+\hspace{-2.4em}
+\scalebox{0.9}{
 \begin{tabular}{l r}
 \begin{minipage}[t][12ex][b]{40ex}
 \begin{exe}
@@ -245,8 +246,8 @@ Content words can otherwise be called ``lexical'' or ``semantic'' centres, which
 \end{exe}
 \end{minipage}
 \end{tabular}
-\vspace{2ex}
-\end{adjustwidth}
+}
+\vspace{1ex}
 
 The reasoning behind setting those criteria is that it increases the chance of finding similar tree structures in different languages, for example when comparing sentences between English and French, which is morphologically richer. (\ref{ex:ud fr tree}) is a tree for the French translation of the sentence in (\ref{ex:ud eng tree}). Even though the French sentence does not have an auxiliary word to mark the future tense, the structures of those sentences are almost identical.
 
@@ -296,47 +297,49 @@ It is not always possible to test both of the words within a dependency, but in 
 % pw23 say that UD is bad for this, SUD is too, but its slightly better, exactly because of the difference described above
 % explanation why this difference matters
 
-Because of this difference between UD and SUD in how dependency heads are chosen, SUD trees reflect more of the syntax of a sentence than the UD trees. This affects which words are found to be inluded in a coordination and consquently what are the length differences between conjuncts, which is an integral part of this work. 
+Because of this difference between UD and SUD in how dependency heads are chosen, SUD trees reflect more of the syntax of a sentence than the UD trees. In consequence, the same coordination can have different extents according to each scheme and therefore different conjunct lengths, which is an integral part of the analysis conducted in this and previous studies on coordinations. 
 
 As \cite{prz:woz:23} mention, the UD scheme is not ideal for coordination analysis, as it is not clear which dependencies are shared by the conjuncts and which are private. This is illustrated by the sentences in (\ref{ex:drink-and-drive}) and (\ref{ex:rapidly-expand}).
 
-\begin{adjustwidth}{-40pt}{-40pt}
-    \vspace{4ex}
-    \begin{tabular}{lr}
-    \begin{minipage}[t][12ex][b]{40ex}
-    \begin{exe}
-    \ex\label{ex:drink-and-drive}
+\vspace{2ex}
+\hspace{-2.3em}
+\scalebox{0.9}{
+\begin{tabular}{lr}
+\begin{minipage}[t][12ex][b]{40ex}
+\begin{exe}
+\ex\label{ex:drink-and-drive}
+\begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
+    \begin{deptext}
+        Never\& drink\& and\& drive\& .\\
+    \end{deptext}
+    \deproot{2}{root}
+    \depedge{2}{1}{advmod}
+    \depedge{2}{4}{conj}
+    \depedge{4}{3}{cc}
+    \depedge{2}{5}{punct}
+\end{dependency}
+\end{exe}
+\end{minipage}
+&
+\begin{minipage}[t][12ex][b]{40ex}
+\begin{exe}
+    \ex\label{ex:rapidly-expand}
     \begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
         \begin{deptext}
-            Never\& drink\& and\& drive\& .\\
-        \end{deptext}
-        \deproot{2}{root}
-        \depedge{2}{1}{advmod}
-        \depedge{2}{4}{conj}
-        \depedge{4}{3}{cc}
-        \depedge{2}{5}{punct}
+                Rapidly\& expanded\& and\& blew\& up\&.\\
+        \end{deptext} 
+        \depedge{2}{1}{advmod} 
+        \depedge{2}{6}{punct}
+        \deproot{2}{root} 
+        \depedge[edge height=2ex]{4}{3}{cc} 
+        \depedge{2}{4}{conj}  
+        \depedge[edge height=4ex]{4}{5}{compound:prt}
     \end{dependency}
-    \end{exe}
-    \end{minipage}
-    &
-    \begin{minipage}[t][12ex][b]{40ex}
-    \begin{exe}
-        \ex\label{ex:rapidly-expand}
-        \begin{dependency}[baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
-            \begin{deptext}
-                 Rapidly\& expanded\& and\& blew\& up\&.\\
-            \end{deptext} 
-            \depedge{2}{1}{advmod} 
-            \depedge{2}{6}{punct}
-            \deproot{2}{root} 
-            \depedge[edge height=2ex]{4}{3}{cc} 
-            \depedge{2}{4}{conj}  
-            \depedge[edge height=4ex]{4}{5}{compound:prt}
-        \end{dependency}
-    \end{exe}
-    \end{minipage}
-    \end{tabular}
-\end{adjustwidth}
+\end{exe}
+\end{minipage}
+\end{tabular}
+}
+\vspace{2ex}
 
 In (\ref{ex:drink-and-drive}) the coordinated words are \textsl{drink} and \textsl{drive}, the word \textsl{never} is attached to the first conjunct and even though English speakers reading this sentence know that it applies to the whole coordination, it is not obvious from the structure of the sentence. The structure in (\ref{ex:rapidly-expand}) is similar, but this time the word \textsl{rapidly} applies only to the first conjunct. In both of those sentences knowledge of the real world is required to accurately determine whether the dependency is shared by the whole coordination (as in (\ref{ex:drink-and-drive})) or private to the first conjunct (as in (\ref{ex:rapidly-expand})). Because of this ambiguity, it is difficult to construct accurate heuristics for determining the extent of each conjunct in a coordination. This issue appears in both UD and SUD, however the following examples show that some of the ambiguities present in UD can be resolved in SUD.
 
@@ -357,9 +360,9 @@ In (\ref{ex:drink-and-drive}) the coordinated words are \textsl{drink} and \text
     \end{xlist}
 \end{xlist}
 
-Let us use an example to consider how those heuristics can be applied and where they fail -- sentence \textsl{This magma often does not reach the surface but cools at depth} (with a tree shown in (\ref{ex:UD magma})) has a coordination with conjuncts \textsl{does not reach the surface} and \textsl{cools at depth}. The \texttt{conj} dependency connects the words \textsl{reach} and \textsl{cools}, so the word \textsl{reach} is the head of the left conjunct. It has a dependency directly on the right, which is always included in the conjunct (based on the Heuristic \ref{h:right}), therefore so far the text of the left conjunct is \textsl{reach the surface}. The head also has some dependencies on the left: one labelled \texttt{aux}, one labelled \texttt{nsubj} and two labelled \texttt{advmod}. According to the Heuristic \ref{h:left-shared}, all of those have to be shared by the whole coordination, meaning that they cannot be included in the left conjunct. Since those are all of the dependencies the head has, the text of the left conjunct is \textsl{reach the surface}, which is incorrect. 
+Let us use an example to consider how those heuristics can be applied and where they fail. The sentence \textsl{This magma often does not reach the surface but cools at depth} (with a tree shown in (\ref{ex:UD magma})) has a coordination with conjuncts \textsl{does not reach the surface} and \textsl{cools at depth}. The \texttt{conj} dependency connects the words \textsl{reach} and \textsl{cools}, so the word \textsl{reach} is the head of the left conjunct. It has a dependency directly on the right, which is always included in the conjunct (based on the Heuristic \ref{h:right}), therefore so far the text of the left conjunct is \textsl{reach the surface}. The head also has some dependencies on the left: one labelled \texttt{aux}, one labelled \texttt{nsubj} and two labelled \texttt{advmod}. According to the Heuristic \ref{h:left-shared}, all of those have to be shared by the whole coordination, meaning that they cannot be included in the left conjunct. Since those are all of the dependencies the head has, the text of the left conjunct is determined to be \textsl{reach the surface}, which is incorrect. 
 
-\begin{adjustwidth}{-20pt}{20pt}
+{\small
 \begin{exe}
     \ex\label{ex:UD magma}
     \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -383,9 +386,9 @@ Let us use an example to consider how those heuristics can be applied and where 
 \end{dependency}
 \end{exe}
 \footnotetext{Sentence \texttt{w01031015} from the \texttt{UD\_English-PUD} corpus \citep{pud}.}
-\end{adjustwidth}
+}
 
-\begin{adjustwidth}{-20pt}{20pt}
+{\small
 \begin{exe}
 \ex\label{ex:UD ballet}
 \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -411,13 +414,13 @@ Let us use an example to consider how those heuristics can be applied and where 
 \end{dependency}
 \end{exe}
 \footnotetext{Sentence \texttt{GUM\_whow\_ballet-14} from the \texttt{UD\_English-GUM} corpus \citep{Zeldes2017}.}
-\end{adjustwidth}
+}
 
 Modifying the heuristics, so that they fit this example, for instance by saying that \texttt{aux} dependencies should always be included in the left conjunct, would on the other hand mean that sentences such as in (\ref{ex:UD ballet}) would have incorrect extracted coordinations. In this example the correct coordinate structure has conjuncts \textsl{snug} and \textsl{not so tight they cut off blood flow}, but if the algorithm included the \texttt{aux} dependency in the first conjunct (as would be required in (\ref{ex:UD magma})), the result would be conjuncts \textsl{should be snug} and \textsl{not so tight they cut off blood flow}.
 
 This however is not an issue when using the SUD scheme. As shown in (\ref{ex:SUD magma}), the words \textsl{does not} cannot be dependencies of the whole coordination, because the word \textsl{does} is the head of the left conjunct and the word \textsl{not} is one of its dependencies on the right and thus is always included in the conjunct. Changing the annotation scheme to SUD does not affect the sentence in (\ref{ex:UD ballet}) -- the word \textsl{snug} has to be the whole left conjunct, because it also does not have any dependencies in this annotation scheme.
 
-\begin{adjustwidth}{-20pt}{20pt}
+{\small
 \begin{exe}
 \ex\label{ex:SUD magma}
 \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -441,9 +444,9 @@ This however is not an issue when using the SUD scheme. As shown in (\ref{ex:SUD
 \end{dependency}
 \end{exe}
 \footnotetext{Sentence \texttt{w01031015} from the \texttt{SUD\_English-PUD}.}
-\end{adjustwidth}
+}
 
-\begin{adjustwidth}{-20pt}{20pt}
+{\small
 \begin{exe}
     \ex\label{ex:SUD ballet}
     \begin{dependency}[hide label, baseline=-\the\dimexpr\fontdimen22\textfont2\relax]
@@ -469,7 +472,7 @@ This however is not an issue when using the SUD scheme. As shown in (\ref{ex:SUD
     \end{dependency}
 \end{exe}
 \footnotetext{Sentence \texttt{GUM\_whow\_ballet-14} from the \texttt{SUD\_English-GUM} corpus.}
-\end{adjustwidth}
+}
 
 Therefore, the focus on syntax in SUD makes it a better fit for coordination analysis.
 
@@ -480,9 +483,9 @@ While UD corpora are often created specifially for the purpose of participating 
 
 UD uses the Bouquet approach to annotating coordination, while SUD uses the Chain one. This means that in the conversion process, some information about the privacy status of a dependency of the coordination can be lost. This is visible in the coordination presented in the sentence \textsl{I just sat in there for like an hour and a half straight and studied}.\footnote{Sentence \texttt{GUM\_vlog\_studying-27} from the GUM corpus \citep{Zeldes2017}.} As the UD annotation in (\ref{ex:UD 1,5h straight}) shows, the word \textsl{straight} is shared by the whole structure. This is not structurally visible in the SUD version in (\ref{ex:SUD 1,5h straight}), where the \texttt{mod} dependency for the word \textsl{straight} is attached to the last conjunct. 
 
-\begin{adjustwidth}{-50pt}{-50pt}
 \vspace{2ex}
-\centering
+\hspace{-2.4em}
+\scalebox{0.8}{
 \begin{tabular}{lr}
 \begin{minipage}[t][9ex][b]{8cm}
 \begin{exe}
@@ -519,7 +522,7 @@ UD uses the Bouquet approach to annotating coordination, while SUD uses the Chai
 \end{exe}
 \end{minipage}
 \end{tabular}
-\end{adjustwidth}
+}
 
 So as not to lose this information while converting the annotation scheme, feature \textsf{Shared=Yes} is added. Similarly, in coordinations where a dependent is attached to the right conjunct in the UD scheme (therefore private to the right conjuct), during the conversion to SUD the feature \textsf{Shared=No} is added.
 
