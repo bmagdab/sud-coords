@@ -135,20 +135,29 @@ def generate_on_file(sents_file, scheme):
 # ud_test_file = 'en_compare-ud-test.conllu'
 
 # model mowiony
-ud_model_file = 'en_comp-spok-ud_charlm_parser.pt'
-sud_model_file = 'en_spok-sud_charlm_parser.pt'
-sud_test_file = 'en_spok-ud-test.conllu'
-ud_test_file = 'en_comp-spok-ud-test.conllu'
+# ud_model_file = 'en_comp-spok-ud_charlm_parser.pt'
+# sud_model_file = 'en_spok-sud_charlm_parser.pt'
+# sud_test_file = 'en_spok-ud-test.conllu'
+# ud_test_file = 'en_comp-spok-ud-test.conllu'
+
+# model pisany
+ud_model_file = 'en_comp-writ-ud_charlm_parser.pt'
+sud_model_file = 'en_written-ud_charlm_parser.pt'
+sud_test_file = 'en_written-ud-test.conllu'
+ud_test_file = 'en_comp-writ-ud-test.conllu'
 
 if args.c:
     sud_test_file = get_conjs(sud_test_file)
     ud_test_file = get_conjs(ud_test_file)
 
-sud = get_sents(sud_test_file)
-ud = get_sents(ud_test_file)
+# sud = get_sents(sud_test_file)
+# ud = get_sents(ud_test_file)
 
-sud_predicted = generate_on_file(sud, 'sud')
-ud_predicted = generate_on_file(ud, 'ud')
+# sud_predicted = generate_on_file(sud, 'sud')
+# ud_predicted = generate_on_file(ud, 'ud')
+
+sud_predicted = 'sud_test_predicted.conllu'
+ud_predicted = 'ud_test_predicted.conllu'
 
 sud_scores = eval_on_file('eval/' + sud_predicted, 'eval/' + sud_test_file)
 ud_scores = eval_on_file('eval/' + ud_predicted, 'eval/' + ud_test_file)
